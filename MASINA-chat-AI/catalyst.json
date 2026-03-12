@@ -1,0 +1,9 @@
+{
+  "functions": {
+    "targets": [
+      "masina_chat_ai_function"
+    ],
+    "ignore": [],
+    "source": "functions"
+  }
+}

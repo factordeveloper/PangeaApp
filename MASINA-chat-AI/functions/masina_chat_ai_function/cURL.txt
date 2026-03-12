@@ -1,0 +1,90 @@
+# =============================================================================
+# cURL para conectarte a QWEN de Catalyst
+# =============================================================================
+
+curl -X POST "https://api.catalyst.zoho.com/quickml/v2/project/12018000000471172/llm/chat" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "CATALYST-ORG: 793004668" \
+  -d '{
+    "prompt": "Tell me more about quantum computing and its future implications",
+    "model": "crm-di-qwen_text_14b-fp8-it",
+    "system_prompt": "Be concise and factual",
+    "top_p": 0.9,
+    "top_k": 50,
+    "best_of": 1,
+    "temperature": 0.7,
+    "max_tokens": 256
+  }'
+
+
+# =============================================================================
+# cURL para conectarte al servidor MASINA Chat AI (conectado a QWEN de Catalyst)
+# =============================================================================
+#
+# Reemplaza TU_URL_FUNCION_CATALYST con la URL real de tu función después del deploy.
+# Ejemplo: https://tu-proyecto.catalystserverless.com/server/masina_chat_ai_function
+# O en desarrollo: https://tu-proyecto.development.catalystserverless.com/server/masina_chat_ai_function
+#
+# Obtén la URL en: Catalyst Console > Functions > masina_chat_ai_function > URL
+# O ejecutando: catalyst deploy
+#
+# =============================================================================
+
+curl -X POST "https://masina-chat-ai-793004668.development.catalystserverless.com/server/masina_chat_ai_function/" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Tell me more about quantum computing and its future implications",
+    "model": "crm-di-qwen_text_14b-fp8-it",
+    "system_prompt": "Be concise and factual",
+    "top_p": 0.9,
+    "top_k": 50,
+    "best_of": 1,
+    "temperature": 0.7,
+    "max_tokens": 256
+  }'
+
+# =============================================================================
+# Ejemplo mínimo (solo prompt):
+# =============================================================================
+
+curl -X POST "TU_URL_FUNCION_CATALYST" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "¿Qué es la inteligencia artificial?"}'
+
+# =============================================================================
+# Alternativa usando "message" en lugar de "prompt":
+# =============================================================================
+
+curl -X POST "TU_URL_FUNCION_CATALYST" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Explícame la computación cuántica"}'
+
+
+# =============================================================================
+# cURL con URL de produccion
+# =============================================================================
+
+
+curl -X POST "https://masina-chat-ai-793004668.development.catalystserverless.com/server/masina_chat_ai_function/" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Tell me more about quantum computing and its future implications",
+    "model": "crm-di-qwen_text_14b-fp8-it",
+    "system_prompt": "Be concise and factual",
+    "top_p": 0.9,
+    "top_k": 50,
+    "best_of": 1,
+    "temperature": 0.7,
+    "max_tokens": 256
+  }'
+
+
+  curl -X POST "https://masina-chat-ai-793004668.development.catalystserverless.com/server/masina_chat_ai_function/" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "¿Qué es la inteligencia artificial?"}'
+
+
+  curl -X POST "https://masina-chat-ai-793004668.development.catalystserverless.com/server/masina_chat_ai_function/" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Explícame la computación cuántica"}'

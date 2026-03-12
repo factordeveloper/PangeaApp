@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel de Atencion — DigiTurno</title>
+  <link rel="stylesheet" href="main.css" />
+  <style>
+    .turno-banner {
+      background: linear-gradient(135deg, var(--primary) 0%, #a80520 100%);
+      color: #fff; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem;
+      display: none; position: relative; overflow: hidden;
+    }
+    .turno-banner.visible { display: block; }
+    .turno-banner.estado-llamado { background: linear-gradient(135deg, var(--accent) 0%, #e09b00 100%); }
+    .turno-banner.estado-en_atencion { background: linear-gradient(135deg, var(--primary) 0%, #a80520 100%); }
+    .banner-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .banner-estado { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; font-weight: 600; }
+    .banner-numero { font-size: 3rem; font-weight: 900; line-height: 1; }
+    .banner-servicio { font-size: 1rem; opacity: 0.9; margin-top: 0.25rem; }
+    .banner-cliente { margin-top: 0.75rem; padding: 0.75rem; background: rgba(255,255,255,0.15); border-radius: 10px; font-size: 0.85rem; }
+    .banner-cliente span { margin-right: 1.5rem; }
+    .banner-prio {
+      display: inline-block; padding: 0.2rem 0.6rem; border-radius: 8px;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      background: rgba(255,255,255,0.25);
+    }
+    .banner-llamadas { font-size: 0.8rem; opacity: 0.8; margin-top: 0.5rem; }
+    .banner-actions { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+    .ba-btn {
+      padding: 0.6rem 1.25rem; border: 2px solid rgba(255,255,255,0.5); border-radius: 10px;
+      background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .ba-btn:hover { background: rgba(255,255,255,0.25); border-color: #fff; }
+    .ba-btn.ba-fin { background: #fff; color: var(--primary); border-color: #fff; }
+    .ba-btn.ba-fin:hover { background: #f1f1f1; }
+
+    .svc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .svc-card-ag {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; box-shadow: var(--shadow); display: flex; flex-direction: column;
+    }
+    .svc-card-ag h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .svc-cola { font-size: 2.5rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0; }
+    .svc-cola-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .svc-llamar { margin-top: auto; }
+
+    .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+    .empty-state svg { width: 64px; height: 64px; stroke: var(--border); stroke-width: 1.5; fill: none; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="screen-overlay" id="loadingOverlay">
+    <div style="text-align:center;"><div class="spinner"></div><p style="color:var(--text-muted)">Verificando sesion...</p></div>
+  </div>
+
+  <div class="screen-overlay hidden" id="authScreen">
+    <div class="auth-card">
+      <div class="auth-icon"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 11l3 3 5-5"/></svg></div>
+      <h2>Panel de Atencion</h2>
+      <p>Inicia sesion para gestionar turnos desde tu modulo de atencion.</p>
+      <div id="authError" style="color:#ef4444;padding:0.5rem;background:#fef2f2;border-radius:8px;margin-bottom:1rem;display:none;font-size:0.85rem;"></div>
+      <button class="btn btn-primary" style="width:100%;padding:0.9rem;" onclick="DigiturnoAPI.redirectToLogin()">Iniciar sesion</button>
+      <button class="btn btn-outline" style="width:100%;padding:0.9rem;margin-top:0.75rem;" onclick="DigiturnoAPI.redirectToSignup()">Crear cuenta</button>
+      <div style="margin-top:1rem;">
+        <a href="javascript:void(0)" onclick="DigiturnoAPI.redirectToResetPassword()" style="color:var(--primary);text-decoration:none;font-size:0.85rem;font-weight:500;">Olvidaste tu contrasena?</a>
+      </div>
+      <a href="index.html" style="display:block;margin-top:1rem;color:var(--text-muted);text-decoration:none;font-size:0.85rem;">Volver al inicio</a>
+    </div>
+  </div>
+
+  <div id="mainContent" class="hidden">
+    <div class="user-bar">
+      <div class="user-info">
+        <div class="user-avatar"><img id="userPhoto" src="" alt=""/></div>
+        <div>
+          <div class="user-name" id="userName">Agente</div>
+          <div class="user-email" id="userEmail"></div>
+          <div style="display:flex;gap:0.4rem;margin-top:0.25rem;flex-wrap:wrap;">
+            <span class="badge badge-agente" id="userRol">Agente</span>
+            <span class="badge badge-modulo" id="userMod">Modulo 1</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <button class="btn btn-outline btn-sm" onclick="cerrarSesion()">Cerrar sesion</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <h1>Panel de Atencion</h1>
+
+      <div class="turno-banner" id="turnoBanner">
+        <div class="banner-top">
+          <div>
+            <div class="banner-estado" id="bannerEstado">LLAMADO</div>
+            <div class="banner-numero" id="bannerNumero">-</div>
+            <div class="banner-servicio" id="bannerServicio"></div>
+          </div>
+          <span class="banner-prio" id="bannerPrio">General</span>
+        </div>
+        <div class="banner-cliente" id="bannerCliente">
+          <span id="bannerNombre"></span>
+          <span id="bannerCedula"></span>
+        </div>
+        <div class="banner-llamadas" id="bannerLlamadas"></div>
+        <div class="banner-actions" id="bannerActions"></div>
+      </div>
+
+      <div class="svc-cards" id="svcCards"></div>
+      <div id="errorMsg" class="error-msg" style="display:none;"></div>
+    </div>
+  </div>
+
+  <script src="https://static.zohocdn.com/catalyst/sdk/js/4.0.0/catalystWebSDK.js"></script>
+  <script src="/__catalyst/sdk/init.js"></script>
+  <script src="main.js"></script>
+  <script>
+    let usuario = null, turnoActivo = null, colaData = [];
+    const PRIO = { discapacidad:'Discapacidad', embarazo:'Embarazo', adulto_mayor:'Adulto mayor', ninguna:'General' };
+
+    async function init(){
+      try {
+        const { usuario: u } = await DigiturnoAPI.verificarSesion();
+        if(!u.perfil_id){ showAuth('No tiene perfil asignado. Contacte al administrador.'); return; }
+        if(u.rol!=='agente' && u.rol!=='admin'){ showAuth('Acceso solo para agentes.'); return; }
+        usuario = u;
+        try { await DigiturnoAPI.iniciarSesionAgente(); } catch(se){ console.warn('Sesion agente:', se.message); }
+        showPanel();
+      } catch(e){
+        console.error('Init agente error:', e);
+        showAuth();
+      }
+    }
+
+    function showAuth(msg){
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('authScreen').classList.remove('hidden');
+      if(msg){ const el=document.getElementById('authError'); el.textContent=msg; el.style.display='block'; }
+    }
+
+    function showPanel(){
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('hidden');
+      updateUI();
+      loadTurnoActivo();
+      loadCola();
+      setInterval(loadCola, 5000);
+    }
+
+    function updateUI(){
+      const n = usuario.nombre||'Agente';
+      document.getElementById('userPhoto').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=E2072D&color=fff&size=80&bold=true`;
+      document.getElementById('userName').textContent = n;
+      document.getElementById('userEmail').textContent = usuario.email||'';
+      document.getElementById('userRol').textContent = usuario.rol==='admin'?'Admin':'Agente';
+      document.getElementById('userRol').className = 'badge '+(usuario.rol==='admin'?'badge-admin':'badge-agente');
+      document.getElementById('userMod').textContent = 'Modulo '+(usuario.modulo_atencion||'1');
+    }
+
+    async function loadTurnoActivo(){
+      try {
+        const { turno } = await DigiturnoAPI.obtenerTurnoActivo();
+        if(turno) { turnoActivo=turno; renderBanner(); }
+        else { turnoActivo=null; hideBanner(); }
+      } catch(e){ turnoActivo=null; hideBanner(); }
+    }
+
+    async function loadCola(){
+      if(!usuario||!usuario.sede_id) return;
+      try {
+        const { cola } = await DigiturnoAPI.obtenerCola(usuario.sede_id);
+        let filtered = cola||[];
+        if(usuario.rol!=='admin' && usuario.servicios_asignados && usuario.servicios_asignados.length>0){
+          filtered = filtered.filter(c => usuario.servicios_asignados.includes(String(c.servicio_id)));
+        }
+        colaData = filtered;
+        renderCards();
+      } catch(e){ console.error(e); }
+    }
+
+    function renderCards(){
+      const el = document.getElementById('svcCards');
+      if(colaData.length===0){
+        el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="1"/><path d="M10 8h4M10 12h4"/></svg><p>No tiene servicios asignados o no hay turnos.</p></div>';
+        return;
+      }
+      el.innerHTML = colaData.map(c=>`
+        <div class="svc-card-ag">
+          <h3>${c.servicio_nombre}</h3>
+          <div class="svc-cola">${c.cantidad}</div>
+          <div class="svc-cola-label">turno(s) en espera</div>
+          <button class="btn btn-primary svc-llamar" onclick="llamar('${c.servicio_id}')" ${turnoActivo?'disabled style="opacity:0.5"':''}>Llamar siguiente</button>
+        </div>
+      `).join('');
+    }
+
+    function renderBanner(){
+      if(!turnoActivo) return;
+      const b = document.getElementById('turnoBanner');
+      b.classList.add('visible');
+      b.className = 'turno-banner visible estado-'+turnoActivo.estado;
+      document.getElementById('bannerEstado').textContent = turnoActivo.estado==='llamado'?'LLAMADO':'EN ATENCION';
+      document.getElementById('bannerNumero').textContent = turnoActivo.numero_turno||'-';
+      document.getElementById('bannerServicio').textContent = turnoActivo.servicio_nombre||'';
+      document.getElementById('bannerPrio').textContent = PRIO[turnoActivo.prioridad]||'General';
+      document.getElementById('bannerNombre').textContent = turnoActivo.nombre_cliente ? 'Cliente: '+turnoActivo.nombre_cliente : '';
+      document.getElementById('bannerCedula').textContent = turnoActivo.cedula ? 'CC: '+turnoActivo.cedula : '';
+      document.getElementById('bannerLlamadas').textContent = turnoActivo.llamadas ? 'Llamada '+(turnoActivo.llamadas)+' de 3' : '';
+
+      let actions = '';
+      if(turnoActivo.estado==='llamado'){
+        actions += `<button class="ba-btn" onclick="rellamar()">Re-llamar</button>`;
+        actions += `<button class="ba-btn ba-fin" onclick="atender()">Atender</button>`;
+        actions += `<button class="ba-btn" onclick="noPresento()">No se presento</button>`;
+      } else if(turnoActivo.estado==='en_atencion'){
+        actions += `<button class="ba-btn ba-fin" onclick="finalizar()">Finalizar turno</button>`;
+      }
+      document.getElementById('bannerActions').innerHTML = actions;
+      renderCards();
+    }
+
+    function hideBanner(){
+      document.getElementById('turnoBanner').classList.remove('visible');
+      turnoActivo = null;
+      renderCards();
+    }
+
+    function showErr(msg){
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg; el.style.display='block';
+      setTimeout(()=>{ el.style.display='none'; }, 4000);
+    }
+
+    async function llamar(svcId){
+      if(turnoActivo){ showErr('Finalice el turno actual primero.'); return; }
+      try {
+        const { turno, message } = await DigiturnoAPI.llamarSiguiente(svcId);
+        if(!turno){ showErr(message||'No hay turnos en espera.'); return; }
+        turnoActivo = turno;
+        turnoActivo.servicio_nombre = colaData.find(c=>c.servicio_id===svcId)?.servicio_nombre||'';
+        renderBanner();
+        loadCola();
+      } catch(e){ showErr(e.message); }
+    }
+
+    async function rellamar(){
+      if(!turnoActivo) return;
+      try {
+        const { turno, message } = await DigiturnoAPI.rellamarTurno(turnoActivo.ROWID);
+        if(!turno){ showErr(message); turnoActivo=null; hideBanner(); loadCola(); return; }
+        turnoActivo.llamadas = turno.llamadas;
+        renderBanner();
+      } catch(e){ showErr(e.message); }
+    }
+
+    async function atender(){
+      if(!turnoActivo) return;
+      try {
+        await DigiturnoAPI.iniciarAtencion(turnoActivo.ROWID);
+        turnoActivo.estado = 'en_atencion';
+        renderBanner();
+      } catch(e){ showErr(e.message); }
+    }
+
+    async function finalizar(){
+      if(!turnoActivo) return;
+      try {
+        await DigiturnoAPI.finalizarTurno(turnoActivo.ROWID);
+        turnoActivo = null; hideBanner(); loadCola();
+      } catch(e){ showErr(e.message); }
+    }
+
+    async function noPresento(){
+      if(!turnoActivo) return;
+      try {
+        await DigiturnoAPI.noSePresento(turnoActivo.ROWID);
+        turnoActivo = null; hideBanner(); loadCola();
+      } catch(e){ showErr(e.message); }
+    }
+
+    async function cerrarSesion(){
+      try { await DigiturnoAPI.finalizarSesionAgente(); } catch(e){}
+      DigiturnoAPI.logout();
+    }
+
+    init();
+  </script>
+</body>
+</html>
