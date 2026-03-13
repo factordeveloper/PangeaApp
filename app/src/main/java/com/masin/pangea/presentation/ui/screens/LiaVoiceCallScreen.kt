@@ -61,7 +61,7 @@ import java.util.*
 
 // private const val INITIAL_MESSAGE = "Hola, soy MASINA, asistente virtual de Grupo Masin. ¿En qué puedo ayudarte hoy?"
 private const val INITIAL_MESSAGE = "¿ En que puedo ayudarte hoy ?"
-private val HeaderRed = Color(0xFFAC1927)
+private val HeaderCyan = Color(0xFF0D00BF)
 private val ChatBackground = Color(0xFFF8F9FA)
 private val UserBubbleColor = Color(0xFFAC1927)
 private val AssistantBubbleColor = Color.White
@@ -254,7 +254,7 @@ fun LiaVoiceCallScreen(onBackPressed: () -> Unit = {}) {
 
 @Composable
 private fun LiaChatHeader(serverStatus: ServerStatus, onClearChat: () -> Unit) {
-    Surface(modifier = Modifier.fillMaxWidth(), color = HeaderRed, shadowElevation = 4.dp) {
+    Surface(modifier = Modifier.fillMaxWidth(), color = HeaderCyan, shadowElevation = 4.dp) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -402,7 +402,7 @@ private fun LiaChatBubble(message: ChatMessage) {
         }
         if (isUser) {
             Spacer(modifier = Modifier.width(8.dp))
-            Surface(modifier = Modifier.size(36.dp), shape = CircleShape, color = HeaderRed) {
+            Surface(modifier = Modifier.size(36.dp), shape = CircleShape, color = HeaderCyan) {
                 Box(contentAlignment = Alignment.Center) { Text("👤", fontSize = 18.sp) }
             }
         }
@@ -428,7 +428,7 @@ private fun LiaTypingIndicator() {
                         animationSpec = infiniteRepeatable(animation = tween(400, delayMillis = index * 150), repeatMode = RepeatMode.Reverse),
                         label = "dot_$index"
                     )
-                    Box(modifier = Modifier.size(8.dp).offset(y = offsetY.dp).background(HeaderRed, CircleShape))
+                    Box(modifier = Modifier.size(8.dp).offset(y = offsetY.dp).background(HeaderCyan, CircleShape))
                 }
             }
         }
@@ -464,7 +464,7 @@ private fun LiaInputFooter(
                     enabled = !isLoading && !isListening,
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = HeaderRed,
+                        focusedBorderColor = HeaderCyan,
                         unfocusedBorderColor = Color(0xFFE6E6E6)
                     ),
                     singleLine = true,
@@ -475,8 +475,8 @@ private fun LiaInputFooter(
                     onClick = onSendClick,
                     enabled = textInput.isNotBlank() && !isLoading,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = HeaderRed,
-                        disabledContainerColor = HeaderRed.copy(alpha = 0.5f)
+                        containerColor = HeaderCyan,
+                        disabledContainerColor = HeaderCyan.copy(alpha = 0.5f)
                     ),
                     modifier = Modifier.size(48.dp)
                 ) {
@@ -488,10 +488,10 @@ private fun LiaInputFooter(
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     AnimatedVisibility(visible = isListening && interimTranscript.isNotEmpty()) {
-                        Surface(color = HeaderRed.copy(alpha = 0.1f), shape = RoundedCornerShape(20.dp), modifier = Modifier.padding(bottom = 8.dp)) {
+                        Surface(color = HeaderCyan.copy(alpha = 0.1f), shape = RoundedCornerShape(20.dp), modifier = Modifier.padding(bottom = 8.dp)) {
                             Text(
                                 text = interimTranscript,
-                                color = HeaderRed, fontStyle = FontStyle.Italic, fontSize = 14.sp,
+                                color = HeaderCyan, fontStyle = FontStyle.Italic, fontSize = 14.sp,
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                             )
                         }
@@ -523,12 +523,12 @@ private fun LiaMicrophoneButton(isListening: Boolean, isDisabled: Boolean, onCli
     val backgroundModifier = when {
         isDisabled -> Modifier.background(Color(0xFFCCCCCC), CircleShape)
         isListening -> Modifier.background(brush = Brush.linearGradient(listOf(Color(0xFFF5576C), Color(0xFFF093FB))), shape = CircleShape)
-        else -> Modifier.background(HeaderRed, CircleShape)
+        else -> Modifier.background(HeaderCyan, CircleShape)
     }
 
     Box(
         modifier = Modifier.size(80.dp).scale(if (isListening) scale else 1f)
-            .shadow(elevation = if (isListening) 12.dp else 6.dp, shape = CircleShape, ambientColor = if (isListening) Color(0xFFF5576C) else HeaderRed)
+            .shadow(elevation = if (isListening) 12.dp else 6.dp, shape = CircleShape, ambientColor = if (isListening) Color(0xFFF5576C) else HeaderCyan)
             .then(backgroundModifier).clip(CircleShape),
         contentAlignment = Alignment.Center
     ) {
