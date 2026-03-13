@@ -1,17 +1,156 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>digiturnoPangea</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DigiTurno — Sistema de Turnos</title>
+  <link rel="stylesheet" href="main.css" />
+  <style>
+    body { background: linear-gradient(135deg, #f4f5f7 0%, #eef0f4 100%); }
+    .top-bar {
+      display: flex; justify-content: flex-end; align-items: center;
+      padding: 0.75rem 2rem; gap: 0.75rem; min-height: 60px;
+    }
+    .user-logged {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--bg-card); padding: 0.5rem 1rem 0.5rem 0.5rem;
+      border-radius: 40px; border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .user-logged-avatar {
+      width: 40px; height: 40px; border-radius: 50%; overflow: hidden;
+      border: 2px solid var(--primary); flex-shrink: 0;
+    }
+    .user-logged-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .user-logged-info { display: flex; flex-direction: column; }
+    .user-logged-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+    .user-logged-role {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-top: 2px;
+    }
+    .role-admin { color: var(--primary); }
+    .role-agente { color: #3b82f6; }
+    .role-none { color: var(--text-muted); }
+    .user-logged-actions { display: flex; gap: 0.5rem; margin-left: 0.5rem; }
+    .hero { text-align: center; padding: 3rem 1rem 2rem; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .hero p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2.5rem; }
+    .modules { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; max-width: 960px; margin: 0 auto; padding: 0 1rem; }
+    .module-card {
+      display: flex; flex-direction: column; align-items: center; text-decoration: none;
+      color: inherit; padding: 2rem 1.5rem; border-radius: 20px; background: var(--bg-card);
+      border: 1px solid var(--border); box-shadow: var(--shadow); transition: all 0.2s;
+    }
+    .module-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+    .module-icon {
+      width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center;
+      justify-content: center; margin-bottom: 1rem;
+    }
+    .module-icon svg { width: 28px; height: 28px; stroke-width: 2; fill: none; }
+    .module-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .module-card p { font-size: 0.85rem; color: var(--text-muted); text-align: center; line-height: 1.4; }
+    .mi1 { background: rgba(226,7,45,0.08); } .mi1 svg { stroke: var(--primary); }
+    .mi2 { background: rgba(250,181,45,0.12); } .mi2 svg { stroke: var(--accent); }
+    .mi3 { background: rgba(59,130,246,0.1); } .mi3 svg { stroke: #3b82f6; }
+    .mi4 { background: rgba(34,197,94,0.1); } .mi4 svg { stroke: var(--success); }
+    .hidden { display: none !important; }
+  </style>
 </head>
-
 <body>
-    <h1>Hello World</h1>
-</body>
+  <div class="top-bar">
+    <div id="guestBar">
+      <button class="btn btn-outline btn-sm" onclick="DigiturnoAPI.redirectToLogin()">Iniciar sesion</button>
+      <button class="btn btn-primary btn-sm" onclick="DigiturnoAPI.redirectToSignup()">Registrarse</button>
+    </div>
+    <div id="userBar" class="user-logged hidden">
+      <div class="user-logged-avatar">
+        <img id="userPhoto" src="" alt="Avatar">
+      </div>
+      <div class="user-logged-info">
+        <span class="user-logged-name" id="userName">Usuario</span>
+        <span class="user-logged-role" id="userRole">-</span>
+      </div>
+      <div class="user-logged-actions">
+        <a id="goToPanel" href="#" class="btn btn-primary btn-sm">Mi Panel</a>
+        <button class="btn btn-outline btn-sm" onclick="DigiturnoAPI.logout()">Salir</button>
+      </div>
+    </div>
+  </div>
+  <div class="hero">
+    <h1>DigiTurno</h1>
+    <p>Sistema de gestion digital de turnos y filas de atencion</p>
+  </div>
+  <div class="modules">
+    <a href="cliente.html" class="module-card">
+      <div class="module-icon mi1">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 4-6 7-6s7 2 7 6"/></svg>
+      </div>
+      <h3>Generar Turno</h3>
+      <p>Solicita tu turno de atencion de forma rapida y sencilla</p>
+    </a>
+    <a href="pantalla.html" class="module-card">
+      <div class="module-icon mi2">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 22h8M12 18v4"/></svg>
+      </div>
+      <h3>Pantalla Publica</h3>
+      <p>Visualiza en tiempo real los turnos llamados y atendidos</p>
+    </a>
+    <a href="agente.html" class="module-card">
+      <div class="module-icon mi3">
+        <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 11l3 3 5-5"/></svg>
+      </div>
+      <h3>Panel de Atencion</h3>
+      <p>Llama y atiende turnos desde tu modulo de servicio</p>
+    </a>
+    <a href="admin.html" class="module-card">
+      <div class="module-icon mi4">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.4-6.4l-1.4 1.4M7 17l-1.4 1.4m12.8 0L17 17M7 7L5.6 5.6"/></svg>
+      </div>
+      <h3>Panel Administrativo</h3>
+      <p>Gestiona sedes, servicios, agentes y reportes del sistema</p>
+    </a>
+  </div>
+  <script src="https://static.zohocdn.com/catalyst/sdk/js/4.0.0/catalystWebSDK.js"></script>
+  <script src="/__catalyst/sdk/init.js"></script>
+  <script src="main.js"></script>
+  <script>
+    (async function checkSession() {
+      try {
+        const { usuario } = await DigiturnoAPI.verificarSesion();
+        if (usuario && usuario.catalyst_user_id) {
+          if (DigiturnoAPI.handlePostLoginRedirect()) return;
 
+          document.getElementById('guestBar').classList.add('hidden');
+          document.getElementById('userBar').classList.remove('hidden');
+          
+          const nombre = usuario.nombre || usuario.email || 'Usuario';
+          document.getElementById('userName').textContent = nombre;
+          document.getElementById('userPhoto').src = 
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=E2072D&color=fff&size=80&bold=true`;
+          
+          const roleEl = document.getElementById('userRole');
+          const panelLink = document.getElementById('goToPanel');
+          
+          if (usuario.rol === 'admin') {
+            roleEl.textContent = 'Administrador';
+            roleEl.className = 'user-logged-role role-admin';
+            panelLink.href = 'admin.html';
+            panelLink.textContent = 'Panel Admin';
+          } else if (usuario.rol === 'agente') {
+            roleEl.textContent = 'Agente';
+            roleEl.className = 'user-logged-role role-agente';
+            panelLink.href = 'agente.html';
+            panelLink.textContent = 'Panel Agente';
+          } else {
+            roleEl.textContent = usuario.perfil_id ? 'Usuario' : 'Sin perfil asignado';
+            roleEl.className = 'user-logged-role role-none';
+            panelLink.classList.add('hidden');
+          }
+        }
+      } catch (e) {
+        // No hay sesion activa, mostrar botones de login
+      }
+    })();
+  </script>
+</body>
 </html>
