@@ -172,13 +172,13 @@ fun PangeaScreen(
                 )
                 DiscoverBlock(
                     modifier = Modifier.weight(1f).height(100.dp),
-                    text = "Desk",
-                    onClick = onNavigateToDesk
+                    text = "Digiturno",
+                    onClick = onNavigateToDigiturno
                 )
                 DiscoverBlock(
                     modifier = Modifier.weight(1f).height(100.dp),
-                    text = "Digiturno",
-                    onClick = onNavigateToDigiturno
+                    text = "Desk",
+                    onClick = onNavigateToDesk
                 )
             }
         }

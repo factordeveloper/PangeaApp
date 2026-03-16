@@ -82,10 +82,7 @@ dependencies {
     
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)
-    
-    // ViewModel Compose
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    
+
     // WebKit for WebView
     implementation(libs.androidx.webkit)
     

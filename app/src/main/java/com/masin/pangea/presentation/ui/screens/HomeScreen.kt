@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,29 +41,29 @@ import com.masin.pangea.R
 import com.masin.pangea.ui.theme.PANGEAappTheme
 
 // Colores para las tarjetas según el diseño (franja superior e iconos)
-private val ConoceAccent = Color(0xFFFFB300)      // Amarillo brillante
-private val GestionaAccent = Color(0xFF1565C0)    // Azul medio/oscuro
-private val SolucionaAccent = Color(0xFFE53935)   // Rojo brillante
-private val PagaAccent = Color(0xFF2E7D32)       // Verde medio/oscuro
+private val PangeaAccent = Color(0xFF7aff40)      // Azul
+private val ELearningAccent = Color(0xFF40ebff)   // Verde lima
+private val DeskAccent = Color(0xFF006cbf)        // Verde
+private val DigiturnoAccent = Color(0xFF3FFF91)   // Cian
 
 // Fondos suaves para el contenido de cada tarjeta (tintes ligeros)
-private val ConoceBackground = Color(0xFFFFF8E1)      // Amarillo muy suave
-private val GestionaBackground = Color(0xFFE3F2FD)    // Azul muy suave
-private val SolucionaBackground = Color(0xFFFFEBEE)   // Rojo muy suave
-private val PagaBackground = Color(0xFFE8F5E9)        // Verde muy suave
+private val PangeaBackground = Color(0xFFF0FFE8)      // Azul muy suave
+private val ELearningBackground = Color(0xFFE8F4FC)   // Verde lima muy suave
+private val DeskBackground = Color(0xFFE8FFFC)        // Verde muy suave
+private val DigiturnoBackground = Color(0xFFF0FFE8)   // Cian muy suave
 
 private val TextGray = Color(0xFF424242)
-private val BannerBackground = Color(0xFF9F0927)
+private val BannerBackground = Color(0xFF7AFF40)
 
 /**
  * Pantalla de inicio con banner y tarjetas de navegación
  */
 @Composable
 fun HomeScreen(
-    onNavigateToConoce: () -> Unit,
-    onNavigateToGestiona: () -> Unit,
-    onNavigateToSoluciona: () -> Unit,
-    onNavigateToPaga: () -> Unit
+    onNavigateToPangea: () -> Unit,
+    onNavigateToELearning: () -> Unit,
+    onNavigateToDesk: () -> Unit,
+    onNavigateToDigiturno: () -> Unit
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -120,7 +121,7 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Masin Center",
+                    text = "Pangea App",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -159,21 +160,21 @@ fun HomeScreen(
                 NavigationCard(
                     modifier = Modifier.weight(1f).height(200.dp),
                     title = "Pangea",
-                    description = "Conoce nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
+                    description = "Descubre nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
                     iconResId = R.drawable.conoce,
-                    accentColor = ConoceAccent,
-                    backgroundColor = ConoceBackground,
-                    onClick = onNavigateToConoce
+                    accentColor = PangeaAccent,
+                    backgroundColor = PangeaBackground,
+                    onClick = onNavigateToPangea
                 )
                 
                 NavigationCard(
                     modifier = Modifier.weight(1f).height(200.dp),
-                    title = "E - Learning",
+                    title = "E-Learning",
                     description = "Forma tu talento y accede a recursos de aprendizaje del Grupo Masin.",
                     iconResId = R.drawable.gestiona,
-                    accentColor = GestionaAccent,
-                    backgroundColor = GestionaBackground,
-                    onClick = onNavigateToGestiona
+                    accentColor = ELearningAccent,
+                    backgroundColor = ELearningBackground,
+                    onClick = onNavigateToELearning
                 )
             }
             
@@ -182,25 +183,27 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+
+                NavigationCard(
+                    modifier = Modifier.weight(1f).height(200.dp),
+                    title = "Desk",
+                    description = "Consulta la pantalla de turnos y administra tu atención.",
+                    iconResId = R.drawable.paga,
+                    accentColor = DeskAccent,
+                    backgroundColor = DeskBackground,
+                    onClick = onNavigateToDesk
+                )
+
                 NavigationCard(
                     modifier = Modifier.weight(1f).height(200.dp),
                     title = "Digiturno",
                     description = "Solicita tu turno de forma ágil y evita filas.",
                     iconResId = R.drawable.soluciona,
-                    accentColor = SolucionaAccent,
-                    backgroundColor = SolucionaBackground,
-                    onClick = onNavigateToSoluciona
+                    accentColor = DigiturnoAccent,
+                    backgroundColor = DigiturnoBackground,
+                    onClick = onNavigateToDigiturno
                 )
-                
-                NavigationCard(
-                    modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Desk",
-                    description = "Consulta la pantalla de turnos y gestiona tu atención.",
-                    iconResId = R.drawable.paga,
-                    accentColor = PagaAccent,
-                    backgroundColor = PagaBackground,
-                    onClick = onNavigateToPaga
-                )
+
             }
         }
         
@@ -269,12 +272,14 @@ private fun NavigationCard(
                     .background(backgroundColor)
                     .padding(12.dp)
             ) {
-                // Descripción
+                // Descripción (maxLines para que el botón "Ir" siempre sea visible)
                 Text(
                     text = description,
                     fontSize = 13.sp,
                     color = TextGray,
-                    lineHeight = 18.sp
+                    lineHeight = 18.sp,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
                 )
                 
                 Spacer(modifier = Modifier.weight(1f))
@@ -315,10 +320,10 @@ private fun NavigationCard(
 fun HomeScreenPreview() {
     PANGEAappTheme {
         HomeScreen(
-            onNavigateToConoce = {},
-            onNavigateToGestiona = {},
-            onNavigateToSoluciona = {},
-            onNavigateToPaga = {}
+            onNavigateToPangea = {},
+            onNavigateToELearning = {},
+            onNavigateToDesk = {},
+            onNavigateToDigiturno = {}
         )
     }
 }
@@ -330,10 +335,10 @@ fun NavigationCardPreview() {
         NavigationCard(
             modifier = Modifier.height(200.dp),
             title = "Pangea",
-            description = "Conoce nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
+            description = "Descubre nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
             iconResId = R.drawable.conoce,
-            accentColor = ConoceAccent,
-            backgroundColor = ConoceBackground,
+            accentColor = PangeaAccent,
+            backgroundColor = PangeaBackground,
             onClick = {}
         )
     }

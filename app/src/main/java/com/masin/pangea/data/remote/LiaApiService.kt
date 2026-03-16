@@ -111,11 +111,6 @@ sealed class ServerStatus {
     object Checking : ServerStatus()
 }
 
-data class MessageRequest(
-    val message: String,
-    val conversationHistory: List<ConversationItem>
-)
-
 /** Request para API MASINA Chat AI (formato QuickML) */
 data class MasinaMessageRequest(
     val prompt: String,
@@ -146,28 +141,4 @@ data class MasinaErrorResponse(
 data class ConversationItem(
     val role: String,
     val content: String
-)
-
-data class ApiResponse(
-    val success: Boolean,
-    val data: MessageData?,
-    val error: String?
-)
-
-data class MessageData(
-    val message: String?,
-    val timestamp: String?
-)
-
-data class StatusApiResponse(
-    val success: Boolean,
-    val data: StatusData?,
-    val error: String?
-)
-
-data class StatusData(
-    @SerializedName("lmStudio") val lmStudio: String?,
-    @SerializedName("huggingFace") val huggingFace: String?,
-    val model: String?,
-    val timestamp: String?
 )

@@ -6,16 +6,13 @@ package com.masin.pangea.data.config
  * IMPORTANTE: Modifica estas URLs según tus necesidades
  */
 object WebViewConfig {
+
+    // URL para la pestaña "E-Learning"
+    const val URL_ELEARNING = "https://www.saludmasin.com/"
     
-    // URL para la pestaña "Conoce"
-    const val URL_CONOCE = "https://www.saludmasin.com/salud-virtual"
+    // URL para la pestaña "Desk"
+    const val URL_DESK = "https://digiturno-pangea-793004668.development.catalystserverless.com/app/cliente.html"
     
-    // URL para la pestaña "Gestiona"
-    const val URL_GESTIONA = "https://grupo.masin.co/"
-    
-    // URL para la pestaña "Soluciona"
-    const val URL_SOLUCIONA = "https://digiturno-pangea-793004668.development.catalystserverless.com/app/cliente.html"
-    
-    // URL para la pestaña "Paga"
-    const val URL_PAGA = "https://digiturno-pangea-793004668.development.catalystserverless.com/app/pantalla.html"
+    // URL para la pestaña "Digiturno"
+    const val URL_DIGITURNO = "https://digiturno-pangea-793004668.development.catalystserverless.com/app/cliente.html"
 }

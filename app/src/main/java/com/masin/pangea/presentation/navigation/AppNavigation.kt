@@ -29,54 +29,54 @@ fun AppNavigation(
         // Pantalla de inicio
         composable(route = NavRoutes.HOME) {
             HomeScreen(
-                onNavigateToConoce = {
-                    navController.navigate(BottomNavItem.Conoce.route)
+                onNavigateToPangea = {
+                    navController.navigate(BottomNavItem.Pangea.route)
                 },
-                onNavigateToGestiona = {
-                    navController.navigate(BottomNavItem.Gestiona.route)
+                onNavigateToELearning = {
+                    navController.navigate(BottomNavItem.ELearning.route)
                 },
-                onNavigateToSoluciona = {
-                    navController.navigate(BottomNavItem.Soluciona.route)
+                onNavigateToDesk = {
+                    navController.navigate(BottomNavItem.Desk.route)
                 },
-                onNavigateToPaga = {
-                    navController.navigate(BottomNavItem.Paga.route)
+                onNavigateToDigiturno = {
+                    navController.navigate(BottomNavItem.Digiturno.route)
                 }
             )
         }
         
-        composable(route = BottomNavItem.Conoce.route) {
+        composable(route = BottomNavItem.Pangea.route) {
             PangeaScreen(
                 onNavigateToElearning = {
-                    navController.navigate(BottomNavItem.Gestiona.route) {
-                        popUpTo(BottomNavItem.Conoce.route) { inclusive = true }
+                    navController.navigate(BottomNavItem.ELearning.route) {
+                        popUpTo(BottomNavItem.Pangea.route) { inclusive = true }
                         launchSingleTop = true
                     }
                 },
                 onNavigateToDesk = {
-                    navController.navigate(BottomNavItem.Paga.route) {
-                        popUpTo(BottomNavItem.Conoce.route) { inclusive = true }
+                    navController.navigate(BottomNavItem.Desk.route) {
+                        popUpTo(BottomNavItem.Pangea.route) { inclusive = true }
                         launchSingleTop = true
                     }
                 },
                 onNavigateToDigiturno = {
-                    navController.navigate(BottomNavItem.Soluciona.route) {
-                        popUpTo(BottomNavItem.Conoce.route) { inclusive = true }
+                    navController.navigate(BottomNavItem.Digiturno.route) {
+                        popUpTo(BottomNavItem.Pangea.route) { inclusive = true }
                         launchSingleTop = true
                     }
                 }
             )
         }
         
-        composable(route = BottomNavItem.Gestiona.route) {
-            WebViewScreen(url = WebViewConfig.URL_GESTIONA)
+        composable(route = BottomNavItem.ELearning.route) {
+            WebViewScreen(url = WebViewConfig.URL_ELEARNING)
         }
         
-        composable(route = BottomNavItem.Soluciona.route) {
-            WebViewScreen(url = WebViewConfig.URL_SOLUCIONA)
+        composable(route = BottomNavItem.Desk.route) {
+            WebViewScreen(url = WebViewConfig.URL_DESK)
         }
         
-        composable(route = BottomNavItem.Paga.route) {
-            WebViewScreen(url = WebViewConfig.URL_PAGA)
+        composable(route = BottomNavItem.Digiturno.route) {
+            WebViewScreen(url = WebViewConfig.URL_DIGITURNO)
         }
 
         // Pantalla de LIA (chat de voz)

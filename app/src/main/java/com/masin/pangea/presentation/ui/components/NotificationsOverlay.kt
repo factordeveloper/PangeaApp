@@ -49,7 +49,7 @@ import java.util.Date
 import java.util.Locale
 
 // Colores del overlay de notificaciones
-private val HeaderRed = Color(0xFFAC1927)
+private val HeaderRed = Color(0xFF40FFD4)
 private val NotificationBackground = Color(0xFFF8F9FA)
 private val UnreadIndicator = Color(0xFFFFB300)  // Amarillo para indicar no leído
 private val TextGray = Color(0xFF424242)
@@ -177,7 +177,7 @@ fun NotificationsOverlay(
                         text = "Notificaciones",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.Black
                     )
                 }
 

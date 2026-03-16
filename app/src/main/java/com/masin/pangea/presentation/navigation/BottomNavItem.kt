@@ -20,35 +20,35 @@ sealed class BottomNavItem(
     val iconResId: Int,
     val selectedColor: Color
 ) {
-    data object Conoce : BottomNavItem(
-        route = "conoce",
+    data object Pangea : BottomNavItem(
+        route = "pangea",
         title = "Pangea",
         iconResId = R.drawable.conoce,
         selectedColor = Color(0xFFFFB300)   // Amarillo
     )
 
-    data object Gestiona : BottomNavItem(
-        route = "gestiona",
+    data object ELearning : BottomNavItem(
+        route = "elearning",
         title = "E - Learning",
         iconResId = R.drawable.gestiona,
         selectedColor = Color(0xFF1565C0)   // Azul
     )
 
-    data object Soluciona : BottomNavItem(
-        route = "soluciona",
+    data object Desk : BottomNavItem(
+        route = "desk",
         title = "Desk",
         iconResId = R.drawable.soluciona,
         selectedColor = Color(0xFFE53935)   // Rojo
     )
 
-    data object Paga : BottomNavItem(
-        route = "paga",
+    data object Digiturno : BottomNavItem(
+        route = "digiturno",
         title = "Digiturno",
         iconResId = R.drawable.paga,
         selectedColor = Color(0xFF2E7D32)   // Verde
     )
     
     companion object {
-        val items = listOf(Conoce, Gestiona, Soluciona, Paga)
+        val items = listOf(Pangea, ELearning, Desk, Digiturno)
     }
 }

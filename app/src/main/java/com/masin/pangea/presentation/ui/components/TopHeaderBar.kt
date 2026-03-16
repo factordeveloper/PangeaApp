@@ -80,6 +80,7 @@ fun TopHeaderBar(
         },
         actions = {
             Row(
+                modifier = Modifier.padding(end = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

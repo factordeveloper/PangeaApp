@@ -61,7 +61,7 @@ import java.util.*
 
 // private const val INITIAL_MESSAGE = "Hola, soy MASINA, asistente virtual de Grupo Masin. ¿En qué puedo ayudarte hoy?"
 private const val INITIAL_MESSAGE = "¿ En que puedo ayudarte hoy ?"
-private val HeaderCyan = Color(0xFF0D00BF)
+private val HeaderCyan = Color(0xFF006CBF)
 private val ChatBackground = Color(0xFFF8F9FA)
 private val UserBubbleColor = Color(0xFFAC1927)
 private val AssistantBubbleColor = Color.White
