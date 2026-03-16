@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.masin.pangea.data.config.WebViewConfig
 import com.masin.pangea.presentation.ui.screens.HomeScreen
 import com.masin.pangea.presentation.ui.screens.LiaVoiceCallScreen
+import com.masin.pangea.presentation.ui.screens.PangeaScreen
 import com.masin.pangea.presentation.ui.screens.WebViewScreen
 
 /**
@@ -44,7 +45,26 @@ fun AppNavigation(
         }
         
         composable(route = BottomNavItem.Conoce.route) {
-            WebViewScreen(url = WebViewConfig.URL_CONOCE)
+            PangeaScreen(
+                onNavigateToElearning = {
+                    navController.navigate(BottomNavItem.Gestiona.route) {
+                        popUpTo(BottomNavItem.Conoce.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToDesk = {
+                    navController.navigate(BottomNavItem.Paga.route) {
+                        popUpTo(BottomNavItem.Conoce.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToDigiturno = {
+                    navController.navigate(BottomNavItem.Soluciona.route) {
+                        popUpTo(BottomNavItem.Conoce.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         
         composable(route = BottomNavItem.Gestiona.route) {

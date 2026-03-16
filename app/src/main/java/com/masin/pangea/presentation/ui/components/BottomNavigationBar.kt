@@ -19,9 +19,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.masin.pangea.presentation.navigation.BottomNavItem
+import com.masin.pangea.presentation.navigation.NavRoutes
 
 // Colores personalizados para la barra de navegación
-private val NavBarBackground = Color(0xFF40FFD4)
+private val NavBarBackground = Color(0xFF3EFFD4)
 private val NavBarIconColor = Color(0xFF0D00BF)
 private val NavBarSelectedColor = Color.White
 
@@ -68,8 +69,10 @@ fun BottomNavigationBar(navController: NavController) {
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
+                            // Pop hasta home para limpiar el back stack al cambiar de pestaña
+                            popUpTo(NavRoutes.HOME) {
                                 saveState = true
+                                inclusive = false
                             }
                             launchSingleTop = true
                             restoreState = true

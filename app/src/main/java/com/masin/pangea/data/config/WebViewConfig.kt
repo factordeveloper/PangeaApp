@@ -14,8 +14,8 @@ object WebViewConfig {
     const val URL_GESTIONA = "https://grupo.masin.co/"
     
     // URL para la pestaña "Soluciona"
-    const val URL_SOLUCIONA = "https://digiturno-793004668.development.catalystserverless.com/app/cliente.html"
+    const val URL_SOLUCIONA = "https://digiturno-pangea-793004668.development.catalystserverless.com/app/cliente.html"
     
     // URL para la pestaña "Paga"
-    const val URL_PAGA = "https://digiturno-793004668.development.catalystserverless.com/app/pantalla.html"
+    const val URL_PAGA = "https://digiturno-pangea-793004668.development.catalystserverless.com/app/pantalla.html"
 }

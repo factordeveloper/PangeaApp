@@ -22,28 +22,28 @@ sealed class BottomNavItem(
 ) {
     data object Conoce : BottomNavItem(
         route = "conoce",
-        title = "Conoce",
+        title = "Pangea",
         iconResId = R.drawable.conoce,
         selectedColor = Color(0xFFFFB300)   // Amarillo
     )
 
     data object Gestiona : BottomNavItem(
         route = "gestiona",
-        title = "Gestiona",
+        title = "E - Learning",
         iconResId = R.drawable.gestiona,
         selectedColor = Color(0xFF1565C0)   // Azul
     )
 
     data object Soluciona : BottomNavItem(
         route = "soluciona",
-        title = "Soluciona",
+        title = "Desk",
         iconResId = R.drawable.soluciona,
         selectedColor = Color(0xFFE53935)   // Rojo
     )
 
     data object Paga : BottomNavItem(
         route = "paga",
-        title = "Paga",
+        title = "Digiturno",
         iconResId = R.drawable.paga,
         selectedColor = Color(0xFF2E7D32)   // Verde
     )

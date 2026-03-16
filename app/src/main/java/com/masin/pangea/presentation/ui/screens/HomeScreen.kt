@@ -151,15 +151,15 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Primera fila: Conoce y Gestiona
+            // Primera fila: Pangea y E - Learning
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 NavigationCard(
                     modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Conoce",
-                    description = "Infórmate sobre nuestros servicios y accede a tus recursos de forma ágil.",
+                    title = "Pangea",
+                    description = "Conoce nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
                     iconResId = R.drawable.conoce,
                     accentColor = ConoceAccent,
                     backgroundColor = ConoceBackground,
@@ -168,8 +168,8 @@ fun HomeScreen(
                 
                 NavigationCard(
                     modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Gestiona",
-                    description = "Administra tus trámites, servicios y actualiza tus datos.",
+                    title = "E - Learning",
+                    description = "Forma tu talento y accede a recursos de aprendizaje del Grupo Masin.",
                     iconResId = R.drawable.gestiona,
                     accentColor = GestionaAccent,
                     backgroundColor = GestionaBackground,
@@ -177,15 +177,15 @@ fun HomeScreen(
                 )
             }
             
-            // Segunda fila: Soluciona y Paga
+            // Segunda fila: Digiturno y Desk
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 NavigationCard(
                     modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Soluciona",
-                    description = "Encuentra alternativas rápidas .",
+                    title = "Digiturno",
+                    description = "Solicita tu turno de forma ágil y evita filas.",
                     iconResId = R.drawable.soluciona,
                     accentColor = SolucionaAccent,
                     backgroundColor = SolucionaBackground,
@@ -194,8 +194,8 @@ fun HomeScreen(
                 
                 NavigationCard(
                     modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Paga",
-                    description = "Realiza tus pagos de forma segura .",
+                    title = "Desk",
+                    description = "Consulta la pantalla de turnos y gestiona tu atención.",
                     iconResId = R.drawable.paga,
                     accentColor = PagaAccent,
                     backgroundColor = PagaBackground,
@@ -329,8 +329,8 @@ fun NavigationCardPreview() {
     PANGEAappTheme {
         NavigationCard(
             modifier = Modifier.height(200.dp),
-            title = "Conoce",
-            description = "Infórmate sobre tus impuestos y accede a recursos sencillos para entenderlos.",
+            title = "Pangea",
+            description = "Conoce nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
             iconResId = R.drawable.conoce,
             accentColor = ConoceAccent,
             backgroundColor = ConoceBackground,
