@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.masin.pangea.data.config.WebViewConfig
+import com.masin.pangea.presentation.ui.screens.ELearningScreen
 import com.masin.pangea.presentation.ui.screens.HomeScreen
 import com.masin.pangea.presentation.ui.screens.LiaVoiceCallScreen
 import com.masin.pangea.presentation.ui.screens.PangeaScreen
@@ -68,7 +69,7 @@ fun AppNavigation(
         }
         
         composable(route = BottomNavItem.ELearning.route) {
-            WebViewScreen(url = WebViewConfig.URL_ELEARNING)
+            ELearningScreen()
         }
         
         composable(route = BottomNavItem.Desk.route) {

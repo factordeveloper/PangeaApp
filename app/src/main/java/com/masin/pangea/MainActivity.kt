@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.masin.pangea.presentation.navigation.AppNavigation
+import com.masin.pangea.presentation.navigation.BottomNavItem
 import com.masin.pangea.presentation.navigation.NavRoutes
 import com.masin.pangea.presentation.ui.components.BottomNavigationBar
 import com.masin.pangea.presentation.ui.components.NotificationsOverlay
@@ -44,13 +45,7 @@ import android.widget.Toast
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -161,15 +156,7 @@ fun MainScreen() {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedItem by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
-
-    val items = listOf(
-        DrawerMenuItem("Home", Icons.Default.Home),
-        DrawerMenuItem("Settings", Icons.Default.Settings),
-        DrawerMenuItem("Share", Icons.Default.Share),
-        DrawerMenuItem("About Us", Icons.Default.Info)
-    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -177,19 +164,36 @@ fun MainScreen() {
             ModalDrawerSheet {
                 DrawerHeader()
                 Spacer(modifier = Modifier.height(8.dp))
-                items.forEachIndexed { index, item ->
+                BottomNavItem.items.forEach { item ->
+                    val isSelected = currentRoute == item.route
                     NavigationDrawerItem(
-                        icon = { Icon(item.icon, contentDescription = null) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = item.iconResId),
+                                contentDescription = item.title,
+                                modifier = Modifier.size(24.dp),
+                                tint = if (isSelected) item.selectedColor else Color.Gray
+                            )
+                        },
                         label = { Text(item.title) },
-                        selected = item == items[selectedItem],
+                        selected = isSelected,
                         onClick = {
-                            selectedItem = index
                             scope.launch { drawerState.close() }
+                            if (currentRoute != item.route) {
+                                navController.navigate(item.route) {
+                                    popUpTo(NavRoutes.HOME) {
+                                        saveState = true
+                                        inclusive = false
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                         },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                         colors = NavigationDrawerItemDefaults.colors(
                             selectedContainerColor = PangeaCyan.copy(alpha = 0.2f),
-                            selectedIconColor = PangeaBlue,
+                            selectedIconColor = item.selectedColor,
                             selectedTextColor = PangeaBlue,
                             unselectedIconColor = Color.Gray,
                             unselectedTextColor = Color.DarkGray
@@ -289,11 +293,6 @@ fun DrawerHeader() {
         )
     }
 }
-
-data class DrawerMenuItem(
-    val title: String,
-    val icon: ImageVector
-)
 
 @Preview(showBackground = true)
 @Composable
