@@ -268,7 +268,7 @@ private fun LiaChatHeader(serverStatus: ServerStatus, onClearChat: () -> Unit) {
                     contentScale = ContentScale.Crop
                 )
                 Column {
-                    Text("MASINA", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("LIA", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Text("Asistente de voz", color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
                 }
             }

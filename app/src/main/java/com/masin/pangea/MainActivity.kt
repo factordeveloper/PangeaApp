@@ -38,7 +38,6 @@ import com.masin.pangea.presentation.navigation.NavRoutes
 import com.masin.pangea.presentation.ui.components.BottomNavigationBar
 import com.masin.pangea.presentation.ui.components.NotificationsOverlay
 import com.masin.pangea.presentation.ui.components.TopHeaderBar
-import com.masin.pangea.presentation.ui.screens.PermissionsHandler
 import com.masin.pangea.ui.theme.PANGEAappTheme
 import kotlinx.coroutines.delay
 import android.widget.Toast
@@ -87,9 +86,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PANGEAappTheme {
-                PermissionsHandler {
-                    AppContent()
-                }
+                AppContent()
             }
         }
     }
