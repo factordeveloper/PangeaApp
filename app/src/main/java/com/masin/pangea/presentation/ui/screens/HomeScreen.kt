@@ -1,12 +1,15 @@
 package com.masin.pangea.presentation.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,15 +26,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.masin.pangea.R
 import com.masin.pangea.ui.theme.PANGEAappTheme
 
 // Colores según el diseño de referencia (blanco, teal oscuro, fondo oscuro)
@@ -63,27 +68,42 @@ fun HomeScreen(
             .background(ScreenBackground)
             .verticalScroll(scrollState)
     ) {
-        // 1. Sección superior - Introducción a Pangea (fondo oscuro)
+        // 1. Sección superior - Introducción a Pangea (fondo con imagen)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(IntroBackgroundDark, IntroBackgroundDarker)
-                    )
-                )
                 .clickable(onClick = onNavigateToPangea)
-                .padding(20.dp)
         ) {
+            // Imagen de fondo
+            Image(
+                painter = painterResource(R.drawable.fondo_texto),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = ContentScale.Crop
+            )
+            // Capa semitransparente oscura para contraste del texto
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(Color.Black.copy(alpha = 0.55f))
+            )
+            // Texto sobre la imagen
             Text(
                 text = "Pangea nació del sueño de unir territorios mediante una ciudadanía digital que conecta personas, empresarios y comunidades bajo los valores de inclusión, sostenibilidad e innovación. Es un ecosistema donde cada espacio tiene un propósito: impulsar proyectos, formar talentos y demostrar que la tecnología puede transformar vidas.",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .align(Alignment.Center),
                 fontSize = 11.sp,
                 color = Color.White,
                 lineHeight = 15.sp
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // 2. Sección "Sobre nosotros"
         Text(
@@ -108,23 +128,25 @@ fun HomeScreen(
                 text = "En este espacio encontrarás toda la información que necesitas para cumplir con tus obligaciones tributarias. Infórmate sobre los impuestos distritales, plazos, beneficios y normatividad vigente.",
             )
 
-            // Dos bloques secundarios lado a lado
+            // Dos bloques secundarios lado a lado (misma altura)
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 TealInfoBlock(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
                     text = "Buscamos conectar emocionalmente con nuestros grupos de interés y compartir nuestra historia."
                 )
                 TealInfoBlock(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
                     text = "Somos la Corporación de Territorios Inteligentes y Sostenibles (CTIS); Organización No Gubernamental colombiana."
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // 3. Sección "Descubre"
         Text(
@@ -136,7 +158,7 @@ fun HomeScreen(
             color = TitleColor
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Row(
             modifier = Modifier
@@ -158,7 +180,8 @@ fun HomeScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        // Espacio extra para que los círculos se vean completos (evita que la barra inferior los corte)
+        Spacer(modifier = Modifier.height(80.dp))
     }
 }
 
