@@ -265,7 +265,7 @@ fun WebViewScreen(url: String) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White),
+                    .background(Color(0xFF0D5C5C)),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -274,8 +274,8 @@ fun WebViewScreen(url: String) {
                         .crossfade(false)
                         .build(),
                     contentDescription = "Cargando...",
-                    modifier = Modifier.size(300.dp),
-                    contentScale = ContentScale.Fit
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
             }
         }

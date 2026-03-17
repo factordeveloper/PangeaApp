@@ -21,7 +21,7 @@ sealed class BottomNavItem(
     val selectedColor: Color
 ) {
     data object Pangea : BottomNavItem(
-        route = "pangea",
+        route = NavRoutes.HOME,
         title = "Pangea",
         iconResId = R.drawable.conoce,
         selectedColor = Color(0xFFFFB300)   // Amarillo

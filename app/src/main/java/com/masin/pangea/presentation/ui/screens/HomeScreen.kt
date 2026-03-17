@@ -1,7 +1,6 @@
 package com.masin.pangea.presentation.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,48 +14,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.masin.pangea.R
 import com.masin.pangea.ui.theme.PANGEAappTheme
 
-// Colores para las tarjetas según el diseño (franja superior e iconos)
-private val PangeaAccent = Color(0xFF7aff40)      // Azul
-private val ELearningAccent = Color(0xFF40ebff)   // Verde lima
-private val DeskAccent = Color(0xFF006cbf)        // Verde
-private val DigiturnoAccent = Color(0xFF3FFF91)   // Cian
-
-// Fondos suaves para el contenido de cada tarjeta (tintes ligeros)
-private val PangeaBackground = Color(0xFFF0FFE8)      // Azul muy suave
-private val ELearningBackground = Color(0xFFE8F4FC)   // Verde lima muy suave
-private val DeskBackground = Color(0xFFE8FFFC)        // Verde muy suave
-private val DigiturnoBackground = Color(0xFFF0FFE8)   // Cian muy suave
-
-private val TextGray = Color(0xFF424242)
-private val BannerBackground = Color(0xFF7AFF40)
+// Colores según el diseño de referencia (blanco, teal oscuro, fondo oscuro)
+private val TealDark = Color(0xFF0D5C5C)
+private val TealDarkAlt = Color(0xFF0A4A4A)
+private val IntroBackgroundDark = Color(0xFF1A3A3A)
+private val IntroBackgroundDarker = Color(0xFF0F2525)
+private val TitleColor = Color(0xFF1A2E2E)
+private val ScreenBackground = Color.White
 
 /**
- * Pantalla de inicio con banner y tarjetas de navegación
+ * Pantalla de inicio rediseñada con:
+ * - Sección intro de Pangea (fondo oscuro)
+ * - Sección "Sobre nosotros" con bloques informativos
+ * - Sección "Descubre" con círculos de navegación
  */
 @Composable
 fun HomeScreen(
@@ -65,252 +55,170 @@ fun HomeScreen(
     onNavigateToDesk: () -> Unit,
     onNavigateToDigiturno: () -> Unit
 ) {
-    val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val screenWidthDp = LocalConfiguration.current.screenWidthDp
-    val isTablet = screenWidthDp >= 600
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(ScreenBackground)
             .verticalScroll(scrollState)
     ) {
-        // Banner GIF - en móviles: altura fija con crop; en tablets: se muestra completo con lateral del color del banner
-        if (isTablet) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(BannerBackground),
-                contentAlignment = Alignment.Center
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(R.drawable.banner)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "Banner Portal del Contribuyente",
-                    modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.Fit
-                )
-            }
-        } else {
-            AsyncImage(
-                model = ImageRequest.Builder(context)
-                    .data(R.drawable.banner)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Banner Portal del Contribuyente",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentScale = ContentScale.Crop
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(20.dp))
-        
-        // Título "Ruta del Contribuyente"
-        Column(
+        // 1. Sección superior - Introducción a Pangea (fondo oscuro)
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(IntroBackgroundDark, IntroBackgroundDarker)
+                    )
+                )
+                .clickable(onClick = onNavigateToPangea)
+                .padding(20.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Pangea App",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "⭐",
-                    fontSize = 20.sp
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
             Text(
-                text = "Aquí encontrarás todo lo que necesitas.",
-                fontSize = 14.sp,
-                color = TextGray,
-                lineHeight = 20.sp
+                text = "Pangea nació del sueño de unir territorios mediante una ciudadanía digital que conecta personas, empresarios y comunidades bajo los valores de inclusión, sostenibilidad e innovación. Es un ecosistema donde cada espacio tiene un propósito: impulsar proyectos, formar talentos y demostrar que la tecnología puede transformar vidas.",
+                fontSize = 11.sp,
+                color = Color.White,
+                lineHeight = 15.sp
             )
         }
-        
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // 2. Sección "Sobre nosotros"
+        Text(
+            text = "Sobre nosotros",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = TitleColor
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        
-        // Grid de tarjetas 2x2
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Primera fila: Pangea y E - Learning
+            // Bloque principal grande
+            TealInfoBlock(
+                text = "En este espacio encontrarás toda la información que necesitas para cumplir con tus obligaciones tributarias. Infórmate sobre los impuestos distritales, plazos, beneficios y normatividad vigente.",
+            )
+
+            // Dos bloques secundarios lado a lado
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                NavigationCard(
-                    modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Pangea",
-                    description = "Descubre nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
-                    iconResId = R.drawable.conoce,
-                    accentColor = PangeaAccent,
-                    backgroundColor = PangeaBackground,
-                    onClick = onNavigateToPangea
+                TealInfoBlock(
+                    modifier = Modifier.weight(1f),
+                    text = "Buscamos conectar emocionalmente con nuestros grupos de interés y compartir nuestra historia."
                 )
-                
-                NavigationCard(
-                    modifier = Modifier.weight(1f).height(200.dp),
-                    title = "E-Learning",
-                    description = "Forma tu talento y accede a recursos de aprendizaje del Grupo Masin.",
-                    iconResId = R.drawable.gestiona,
-                    accentColor = ELearningAccent,
-                    backgroundColor = ELearningBackground,
-                    onClick = onNavigateToELearning
+                TealInfoBlock(
+                    modifier = Modifier.weight(1f),
+                    text = "Somos la Corporación de Territorios Inteligentes y Sostenibles (CTIS); Organización No Gubernamental colombiana."
                 )
-            }
-            
-            // Segunda fila: Digiturno y Desk
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-
-                NavigationCard(
-                    modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Desk",
-                    description = "Consulta la pantalla de turnos y administra tu atención.",
-                    iconResId = R.drawable.paga,
-                    accentColor = DeskAccent,
-                    backgroundColor = DeskBackground,
-                    onClick = onNavigateToDesk
-                )
-
-                NavigationCard(
-                    modifier = Modifier.weight(1f).height(200.dp),
-                    title = "Digiturno",
-                    description = "Solicita tu turno de forma ágil y evita filas.",
-                    iconResId = R.drawable.soluciona,
-                    accentColor = DigiturnoAccent,
-                    backgroundColor = DigiturnoBackground,
-                    onClick = onNavigateToDigiturno
-                )
-
             }
         }
-        
-        Spacer(modifier = Modifier.height(24.dp))
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // 3. Sección "Descubre"
+        Text(
+            text = "Descubre",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = TitleColor
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            DiscoverCircle(
+                label = "DigiTurno",
+                onClick = onNavigateToDigiturno
+            )
+            DiscoverCircle(
+                label = "E-Learning",
+                onClick = onNavigateToELearning
+            )
+            DiscoverCircle(
+                label = "Desk",
+                onClick = onNavigateToDesk
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
 /**
- * Tarjeta de navegación reutilizable con franja superior de color
+ * Bloque informativo con fondo teal oscuro y texto blanco
  */
 @Composable
-private fun NavigationCard(
+private fun TealInfoBlock(
     modifier: Modifier = Modifier,
-    title: String,
-    description: String,
-    iconResId: Int,
-    accentColor: Color,
-    backgroundColor: Color,
-    onClick: () -> Unit
+    text: String
 ) {
     Card(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+            .shadow(4.dp, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp)),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = TealDark),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
+        Text(
+            text = text,
+            modifier = Modifier.padding(16.dp),
+            fontSize = 11.sp,
+            color = Color.White,
+            lineHeight = 15.sp
+        )
+    }
+}
+
+/**
+ * Círculo de navegación para la sección "Descubre"
+ */
+@Composable
+private fun DiscoverCircle(
+    label: String,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .size(90.dp)
+            .shadow(4.dp, CircleShape)
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
+        shape = CircleShape,
+        colors = CardDefaults.cardColors(containerColor = TealDarkAlt),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
                 .fillMaxSize()
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
         ) {
-            // Franja superior de color con icono y título (blanco para contraste)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(accentColor)
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = iconResId),
-                    contentDescription = title,
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.White
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
-            
-            // Contenido principal con fondo suave de color
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(backgroundColor)
-                    .padding(12.dp)
-            ) {
-                // Descripción (maxLines para que el botón "Ir" siempre sea visible)
-                Text(
-                    text = description,
-                    fontSize = 13.sp,
-                    color = TextGray,
-                    lineHeight = 18.sp,
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
-                
-                Spacer(modifier = Modifier.weight(1f))
-                
-                // Botón "Ir" con borde del color de acento
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .border(
-                            width = 1.5.dp,
-                            color = accentColor,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text(
-                        text = "Ir",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = accentColor
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "→",
-                        fontSize = 16.sp,
-                        color = accentColor
-                    )
-                }
-            }
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -324,22 +232,6 @@ fun HomeScreenPreview() {
             onNavigateToELearning = {},
             onNavigateToDesk = {},
             onNavigateToDigiturno = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NavigationCardPreview() {
-    PANGEAappTheme {
-        NavigationCard(
-            modifier = Modifier.height(200.dp),
-            title = "Pangea",
-            description = "Descubre nuestro ecosistema de ciudadanía digital que conecta personas, empresarios y comunidades.",
-            iconResId = R.drawable.conoce,
-            accentColor = PangeaAccent,
-            backgroundColor = PangeaBackground,
-            onClick = {}
         )
     }
 }

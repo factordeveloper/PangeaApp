@@ -22,9 +22,9 @@ import com.masin.pangea.presentation.navigation.BottomNavItem
 import com.masin.pangea.presentation.navigation.NavRoutes
 
 // Colores personalizados para la barra de navegación
-private val NavBarBackground = Color(0xFF3EFFD4)
-private val NavBarIconColor = Color(0xFF0D00BF)
-private val NavBarSelectedColor = Color.White
+private val NavBarBackground = Color(0xFF0D5C5C)
+private val NavBarIconColor = Color(0xFFFFFFFF)
+private val NavBarSelectedColor = Color.Black
 
 /**
  * Componente de barra de navegación inferior personalizada
