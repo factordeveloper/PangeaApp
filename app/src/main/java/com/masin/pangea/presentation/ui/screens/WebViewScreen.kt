@@ -21,7 +21,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -281,19 +280,12 @@ fun WebViewScreen(url: String) {
         }
 
         if (hasError) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.no_internet),
-                    contentDescription = "Sin conexión a internet",
-                    modifier = Modifier.size(300.dp),
-                    contentScale = ContentScale.Fit
-                )
-            }
+            Image(
+                painter = painterResource(id = R.drawable.no_internet),
+                contentDescription = "Sin conexión a internet",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
         }
     }
 }
