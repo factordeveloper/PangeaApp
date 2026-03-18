@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.masin.pangea.data.config.WebViewConfig
+import com.masin.pangea.presentation.ui.screens.DeskScreen
 import com.masin.pangea.presentation.ui.screens.ELearningScreen
 import com.masin.pangea.presentation.ui.screens.HomeScreen
 import com.masin.pangea.presentation.ui.screens.LiaVoiceCallScreen
@@ -51,7 +52,7 @@ fun AppNavigation(
         }
         
         composable(route = BottomNavItem.Desk.route) {
-            WebViewScreen(url = WebViewConfig.URL_DESK)
+            DeskScreen()
         }
         
         composable(route = BottomNavItem.Digiturno.route) {

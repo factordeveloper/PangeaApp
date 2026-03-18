@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
     
     companion object {
         // Constante pre-calculada - Color blanco para status bar
-        private const val STATUS_BAR_COLOR = 0xFFFFFFFF.toInt()
+        private const val STATUS_BAR_COLOR = 0xFF0D5C5C.toInt()
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,7 +118,7 @@ fun SplashScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF006CBF)),
+            .background(Color(0xFF018786)),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(

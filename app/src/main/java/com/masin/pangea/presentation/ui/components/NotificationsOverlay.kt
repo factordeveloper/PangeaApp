@@ -43,7 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.masin.pangea.ui.theme.PrimaryRed
+import com.masin.pangea.ui.theme.PangeaGreen
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -239,7 +239,7 @@ private fun NotificationCard(notification: NotificationItem) {
             Icon(
                 imageVector = notification.type.icon,
                 contentDescription = null,
-                tint = if (notification.isRead) TextLightGray else PrimaryRed,
+                tint = if (notification.isRead) TextLightGray else PangeaGreen,
                 modifier = Modifier.size(28.dp)
             )
         }
