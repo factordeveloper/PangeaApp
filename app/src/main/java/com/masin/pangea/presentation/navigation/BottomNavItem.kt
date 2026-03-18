@@ -24,28 +24,28 @@ sealed class BottomNavItem(
         route = NavRoutes.HOME,
         title = "Pangea",
         iconResId = R.drawable.conoce,
-        selectedColor = Color(0xFFFFB300)   // Amarillo
+        selectedColor = Color(0xFF006CBF)   // Amarillo
     )
 
     data object ELearning : BottomNavItem(
         route = "elearning",
         title = "E - Learning",
         iconResId = R.drawable.gestiona,
-        selectedColor = Color(0xFF1565C0)   // Azul
+        selectedColor = Color(0xFF00A9BF)   // Azul
     )
 
     data object Desk : BottomNavItem(
         route = "desk",
         title = "Desk",
         iconResId = R.drawable.soluciona,
-        selectedColor = Color(0xFFE53935)   // Rojo
+        selectedColor = Color(0xFF40FF52)   // Rojo
     )
 
     data object Digiturno : BottomNavItem(
         route = "digiturno",
         title = "Digiturno",
         iconResId = R.drawable.paga,
-        selectedColor = Color(0xFF2E7D32)   // Verde
+        selectedColor = Color(0xFF40EBFF)   // Verde
     )
     
     companion object {

@@ -278,13 +278,13 @@ fun DrawerHeader() {
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Asistente MASINA",
+            text = "Asistente LIA",
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp
         )
         Text(
-            text = "masin.com",
+            text = "Pangea App",
             color = Color.White.copy(alpha = 0.8f),
             fontSize = 14.sp
         )
