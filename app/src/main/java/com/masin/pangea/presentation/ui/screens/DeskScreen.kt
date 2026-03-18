@@ -14,14 +14,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,17 +63,19 @@ private val TextWhite = Color.White
 @Composable
 fun DeskScreen() {
     val scrollState = rememberScrollState()
+    var showAuthModal by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
                 Brush.verticalGradient(
                     colors = listOf(DeskBackgroundTeal, DeskBackgroundDark)
                 )
             )
             .verticalScroll(scrollState)
-    ) {
+        ) {
         // 1. Header: título y descripción
         Column(
             modifier = Modifier
@@ -190,12 +202,12 @@ fun DeskScreen() {
             DeskActionCard(
                 title = "MIS CASOS",
                 subtitle = "lorem impus lorem impus",
-                onClick = { /* TODO */ }
+                onClick = { showAuthModal = true }
             )
             DeskActionCard(
                 title = "CREAR CASO",
                 subtitle = "lorem impus lorem impus",
-                onClick = { /* TODO */ }
+                onClick = { showAuthModal = true }
             )
         }
 
@@ -222,6 +234,96 @@ fun DeskScreen() {
         }
 
         Spacer(modifier = Modifier.height(32.dp))
+    }
+
+        if (showAuthModal) {
+            DeskAuthModal(
+                onDismiss = { showAuthModal = false },
+                onLoginClick = { /* TODO: navegar a login */ showAuthModal = false },
+                onCreateAccountClick = { /* TODO: navegar a crear cuenta */ showAuthModal = false }
+            )
+        }
+    }
+}
+
+@Composable
+private fun DeskAuthModal(
+    onDismiss: () -> Unit,
+    onLoginClick: () -> Unit,
+    onCreateAccountClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+            .clickable(onClick = onDismiss),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(horizontal = 24.dp)
+                .clickable { /* Consumir clic para no cerrar al tocar el modal */ },
+            shape = RoundedCornerShape(24.dp),
+            color = Color.White
+        ) {
+            Box(modifier = Modifier.padding(24.dp)) {
+                IconButton(
+                    onClick = onDismiss,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(36.dp)
+                        .background(ButtonDark, CircleShape)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Cerrar",
+                        tint = TextWhite,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Image(
+                        painter = painterResource(R.drawable.fondo_texto),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Button(
+                        onClick = onLoginClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = ButtonDark)
+                    ) {
+                        Text("Iniciar sesión", color = TextWhite, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "¿No tienes una cuenta?",
+                        fontSize = 14.sp,
+                        color = Color(0xFF6B7B8C)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = onCreateAccountClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = ButtonDark)
+                    ) {
+                        Text("Crear cuenta", color = TextWhite, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
     }
 }
 

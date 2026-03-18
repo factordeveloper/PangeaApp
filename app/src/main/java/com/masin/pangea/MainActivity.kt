@@ -118,7 +118,7 @@ fun SplashScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF018786)),
+            .background(Color(0xFF0D5C5C)), 
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
