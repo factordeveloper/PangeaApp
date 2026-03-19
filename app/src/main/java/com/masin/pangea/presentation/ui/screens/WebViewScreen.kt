@@ -1,22 +1,14 @@
 package com.masin.pangea.presentation.ui.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Build
 import android.view.ViewGroup
 import android.webkit.CookieManager
-import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -54,50 +46,6 @@ fun WebViewScreen(url: String) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
-    
-    // Estado para manejar la selección de archivos (nombre distinto al parámetro de onShowFileChooser)
-    var pendingFileCallback by remember { mutableStateOf<ValueCallback<Array<Uri>>?>(null) }
-    
-    // Launcher para seleccionar archivos (debe ir antes de permissionLauncher)
-    val fileChooserLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        val uris = if (result.resultCode == android.app.Activity.RESULT_OK) {
-            result.data?.let { intent ->
-                val clipData = intent.clipData
-                if (clipData != null) {
-                    Array(clipData.itemCount) { i -> clipData.getItemAt(i).uri }
-                } else {
-                    intent.data?.let { arrayOf(it) }
-                }
-            }
-        } else null
-        
-        pendingFileCallback?.onReceiveValue(uris)
-        pendingFileCallback = null
-    }
-    
-    // Launcher para solicitar permisos
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions.values.any { it }) {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "*/*"
-                addCategory(Intent.CATEGORY_OPENABLE)
-                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            }
-            try {
-                fileChooserLauncher.launch(intent)
-            } catch (e: Exception) {
-                pendingFileCallback?.onReceiveValue(null)
-                pendingFileCallback = null
-            }
-        } else {
-            pendingFileCallback?.onReceiveValue(null)
-            pendingFileCallback = null
-        }
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
@@ -201,56 +149,12 @@ fun WebViewScreen(url: String) {
                     webChromeClient = object : WebChromeClient() {
                         override fun onShowFileChooser(
                             webView: WebView?,
-                            filePathCallback: ValueCallback<Array<Uri>>?,
+                            filePathCallback: android.webkit.ValueCallback<Array<android.net.Uri>>?,
                             fileChooserParams: FileChooserParams?
                         ): Boolean {
-                            // Cancelar cualquier callback previo
-                            pendingFileCallback?.onReceiveValue(null)
-                            pendingFileCallback = filePathCallback
-                            
-                            // Verificar permisos necesarios según la versión de Android
-                            val permissionsToRequest = mutableListOf<String>()
-                            
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                // Android 13+ requiere permisos específicos por tipo de medio
-                                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                                    permissionsToRequest.add(android.Manifest.permission.READ_MEDIA_IMAGES)
-                                }
-                                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
-                                    permissionsToRequest.add(android.Manifest.permission.READ_MEDIA_VIDEO)
-                                }
-                                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                                    permissionsToRequest.add(android.Manifest.permission.READ_MEDIA_AUDIO)
-                                }
-                            } else {
-                                // Android 12 y anteriores
-                                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                    permissionsToRequest.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                                }
-                            }
-                            
-                            // Si necesitamos solicitar permisos
-                            if (permissionsToRequest.isNotEmpty()) {
-                                permissionLauncher.launch(permissionsToRequest.toTypedArray())
-                                return true
-                            }
-                            
-                            // Crear intent para seleccionar archivos
-                            val intent = fileChooserParams?.createIntent() ?: Intent(Intent.ACTION_GET_CONTENT).apply {
-                                type = "*/*"
-                                addCategory(Intent.CATEGORY_OPENABLE)
-                                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                            }
-                            
-                            try {
-                                fileChooserLauncher.launch(intent)
-                            } catch (e: Exception) {
-                                pendingFileCallback?.onReceiveValue(null)
-                                pendingFileCallback = null
-                                return false
-                            }
-                            
-                            return true
+                            // Subida de archivos deshabilitada
+                            filePathCallback?.onReceiveValue(null)
+                            return false
                         }
                     }
                     loadUrl(url)
