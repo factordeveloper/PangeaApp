@@ -48,7 +48,7 @@ import com.masin.pangea.R
 import com.masin.pangea.ui.theme.PANGEAappTheme
 
 // Colores del módulo Desk (fondo teal oscuro con gradiente)
-private val DeskBackgroundDark = Color(0xFF0F2525)
+private val DeskBackgroundDark = Color.White
 private val DeskBackgroundTeal = Color(0xFF1A3A3A)
 private val CardTeal = Color(0xFF0D5C5C)
 private val CardTealAlt = Color(0xFF0A4A4A)
@@ -119,7 +119,7 @@ fun DeskScreen() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(12.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -223,7 +223,7 @@ fun DeskScreen() {
                 text = "Recomendaciones",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextWhite,
+                color = Color.Black,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
             DeskActionCard(

@@ -129,7 +129,11 @@ fun ELearningScreen() {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            val listState = rememberLazyListState()
+            // Carrusel infinito: repetimos los items muchas veces y empezamos en el centro
+            val repeatCount = 500
+            val totalItems = repeatCount * conventionLogos.size
+            val initialIndex = totalItems / 2
+            val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
             val scope = rememberCoroutineScope()
             val itemSize = 120.dp
 
@@ -141,10 +145,8 @@ fun ELearningScreen() {
                 IconButton(
                     onClick = {
                         val currentIndex = listState.firstVisibleItemIndex
-                        if (currentIndex > 0) {
-                            scope.launch {
-                                listState.animateScrollToItem(currentIndex - 1)
-                            }
+                        scope.launch {
+                            listState.animateScrollToItem((currentIndex - 1 + totalItems) % totalItems)
                         }
                     }
                 ) {
@@ -164,8 +166,9 @@ fun ELearningScreen() {
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
-                    items(conventionLogos.size) { index ->
-                        val (drawableRes, contentDesc) = conventionLogos[index]
+                    items(totalItems, key = { it }) { index ->
+                        val actualIndex = index % conventionLogos.size
+                        val (drawableRes, contentDesc) = conventionLogos[actualIndex]
                         Box(
                             modifier = Modifier
                                 .size(itemSize)
@@ -192,10 +195,8 @@ fun ELearningScreen() {
                 IconButton(
                     onClick = {
                         val currentIndex = listState.firstVisibleItemIndex
-                        if (currentIndex < conventionLogos.size - 1) {
-                            scope.launch {
-                                listState.animateScrollToItem(currentIndex + 1)
-                            }
+                        scope.launch {
+                            listState.animateScrollToItem((currentIndex + 1) % totalItems)
                         }
                     }
                 ) {

@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,8 @@ fun WebViewScreen(url: String) {
     var isLoading by remember { mutableStateOf(true) }
     var hasError by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+    val isTablet = configuration.screenWidthDp >= 600
     
     // Estado para manejar la selección de archivos (nombre distinto al parámetro de onShowFileChooser)
     var pendingFileCallback by remember { mutableStateOf<ValueCallback<Array<Uri>>?>(null) }
@@ -269,7 +272,7 @@ fun WebViewScreen(url: String) {
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(context)
-                        .data(R.drawable.loading)
+                        .data(if (isTablet) R.drawable.loading_tablet else R.drawable.loading)
                         .crossfade(false)
                         .build(),
                     contentDescription = "Cargando...",

@@ -13,15 +13,15 @@
 
     <!-- Tema de Splash para cold start optimizado -->
     <style name="Theme.PANGEAapp.Splash" parent="Theme.SplashScreen">
-        <!-- Color de fondo del splash - rojo AC1926 -->
+
         <item name="windowSplashScreenBackground">@color/teal_700</item>
-        <!-- Icono central del splash - transparente para que el GIF de Compose sea protagonista -->
+
         <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
-        <!-- Tema post-splash -->
+
         <item name="postSplashScreenTheme">@style/Theme.PANGEAapp</item>
-        <!-- Barra de estado durante splash - mismo color que el fondo -->
+
         <item name="android:statusBarColor">@color/teal_700</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
-    
+
 </resources>
