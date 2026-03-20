@@ -9,7 +9,6 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,12 +23,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import coil.size.Size
 import com.masin.pangea.R
+
+/** Límite de píxeles al decodificar drawables de pantalla completa (evita crash del Canvas en tablets). */
+private const val MAX_FULLSCREEN_DECODE_PX = 4096
 
 /**
  * Pantalla optimizada que muestra un WebView con la URL especificada.
@@ -46,6 +47,13 @@ fun WebViewScreen(url: String) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
+    val decodeSize = run {
+        val dm = context.resources.displayMetrics
+        Size(
+            dm.widthPixels.coerceAtMost(MAX_FULLSCREEN_DECODE_PX),
+            dm.heightPixels.coerceAtMost(MAX_FULLSCREEN_DECODE_PX)
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
@@ -177,6 +185,7 @@ fun WebViewScreen(url: String) {
                 AsyncImage(
                     model = ImageRequest.Builder(context)
                         .data(if (isTablet) R.drawable.loading_tablet else R.drawable.loading)
+                        .size(decodeSize)
                         .crossfade(false)
                         .build(),
                     contentDescription = "Cargando...",
@@ -187,8 +196,12 @@ fun WebViewScreen(url: String) {
         }
 
         if (hasError) {
-            Image(
-                painter = painterResource(id = R.drawable.no_internet),
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(R.drawable.no_internet)
+                    .size(decodeSize)
+                    .crossfade(false)
+                    .build(),
                 contentDescription = "Sin conexión a internet",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
