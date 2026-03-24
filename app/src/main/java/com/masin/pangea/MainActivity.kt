@@ -136,6 +136,11 @@ fun SplashScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+    val context = LocalContext.current
+    val sharedPrefs = remember { context.getSharedPreferences("pangea_prefs", android.content.Context.MODE_PRIVATE) }
+    val isFirstRun = remember { sharedPrefs.getBoolean("is_first_run", true) }
+    val startDestination = if (isFirstRun) NavRoutes.WALKTHROUGH else NavRoutes.WELCOME
+
     val navController = rememberNavController()
     var showNotifications by remember { mutableStateOf(false) }
     
@@ -148,14 +153,14 @@ fun MainScreen() {
     
     val isLiaScreen = currentRoute == NavRoutes.LIA
     val isWelcomeScreen = currentRoute == NavRoutes.WELCOME
+    val isWalkthroughScreen = currentRoute == NavRoutes.WALKTHROUGH
     val isPlanSelectionScreen = currentRoute == NavRoutes.PLAN_SELECTION
     val hasChatInput = isLiaScreen
-    val shouldShowBottomBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen
-    val shouldShowTopBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen
+    val shouldShowBottomBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen && !isWalkthroughScreen
+    val shouldShowTopBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen && !isWalkthroughScreen
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -244,7 +249,8 @@ fun MainScreen() {
         ) { innerPadding ->
             AppNavigation(
                 navController = navController,
-                paddingValues = innerPadding
+                paddingValues = innerPadding,
+                startDestination = startDestination
             )
         }
 

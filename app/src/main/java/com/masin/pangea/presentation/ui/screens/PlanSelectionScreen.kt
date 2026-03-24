@@ -53,7 +53,7 @@ fun PlanSelectionScreen(
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
-        )
+        ) 
 
         Box(
             modifier = Modifier

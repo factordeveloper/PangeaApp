@@ -16,19 +16,33 @@ import com.masin.pangea.presentation.ui.screens.WebViewScreen
 import com.masin.pangea.presentation.ui.screens.WelcomeScreen
 import com.masin.pangea.presentation.ui.screens.PlanSelectionScreen
 
+import com.masin.pangea.presentation.ui.screens.WalkthroughScreen
+
 /**
  * Configuración de navegación de la aplicación
  */
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    startDestination: String = NavRoutes.WELCOME
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.WELCOME,
+        startDestination = startDestination,
         modifier = Modifier.padding(paddingValues)
     ) {
+        // Recorrido Virtual
+        composable(route = NavRoutes.WALKTHROUGH) {
+            WalkthroughScreen(
+                onFinishWalkthrough = {
+                    navController.navigate(NavRoutes.WELCOME) {
+                        popUpTo(NavRoutes.WALKTHROUGH) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         // Pantalla de Bienvenida
         composable(route = NavRoutes.WELCOME) {
             WelcomeScreen(

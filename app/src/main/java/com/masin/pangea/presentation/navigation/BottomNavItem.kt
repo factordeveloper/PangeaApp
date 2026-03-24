@@ -7,6 +7,7 @@ import com.masin.pangea.R
  * Rutas de navegación de la aplicación
  */
 object NavRoutes {
+    const val WALKTHROUGH = "walkthrough"
     const val WELCOME = "welcome"
     const val PLAN_SELECTION = "plan_selection"
     const val HOME = "home"
