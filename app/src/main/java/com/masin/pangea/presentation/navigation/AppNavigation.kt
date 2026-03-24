@@ -13,6 +13,8 @@ import com.masin.pangea.presentation.ui.screens.ELearningScreen
 import com.masin.pangea.presentation.ui.screens.HomeScreen
 import com.masin.pangea.presentation.ui.screens.LiaVoiceCallScreen
 import com.masin.pangea.presentation.ui.screens.WebViewScreen
+import com.masin.pangea.presentation.ui.screens.WelcomeScreen
+import com.masin.pangea.presentation.ui.screens.PlanSelectionScreen
 
 /**
  * Configuración de navegación de la aplicación
@@ -24,9 +26,31 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.HOME,
+        startDestination = NavRoutes.WELCOME,
         modifier = Modifier.padding(paddingValues)
     ) {
+        // Pantalla de Bienvenida
+        composable(route = NavRoutes.WELCOME) {
+            WelcomeScreen(
+                onNavigateToHome = {
+                    navController.navigate(NavRoutes.PLAN_SELECTION) {
+                        popUpTo(NavRoutes.WELCOME) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Pantalla de Selección de Plan
+        composable(route = NavRoutes.PLAN_SELECTION) {
+            PlanSelectionScreen(
+                onNavigateToHome = {
+                    navController.navigate(NavRoutes.HOME) {
+                        popUpTo(NavRoutes.PLAN_SELECTION) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         // Pantalla de inicio
         composable(route = NavRoutes.HOME) {
             HomeScreen(

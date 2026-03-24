@@ -147,9 +147,11 @@ fun MainScreen() {
     val isImeVisible = imeBottom > 0
     
     val isLiaScreen = currentRoute == NavRoutes.LIA
+    val isWelcomeScreen = currentRoute == NavRoutes.WELCOME
+    val isPlanSelectionScreen = currentRoute == NavRoutes.PLAN_SELECTION
     val hasChatInput = isLiaScreen
-    val shouldShowBottomBar = !isImeVisible || !hasChatInput
-    val shouldShowTopBar = !isImeVisible || !hasChatInput
+    val shouldShowBottomBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen
+    val shouldShowTopBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
