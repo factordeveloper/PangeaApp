@@ -77,15 +77,47 @@ private val CardBackgroundLight = Color(0xFFF5F5F5)
 private val TextDark = Color(0xFF1A1A1A)
 private val TextGray = Color(0xFF424242)
 private val PillBorder = Color(0xFFE0E0E0)
+private val ConventionLogoRing = Color(0xFFB8DCE8)
 
-// Logos de convenios para el carrusel
+private data class ConventionLogoItem(
+    val drawableRes: Int,
+    val contentDescription: String,
+    /** Mismo tono que el fondo del asset para que el círculo se vea homogéneo. */
+    val circleBackground: Color
+)
+
+// Logos de convenios para el carrusel (circleBackground acoplado al PNG de cada uno)
 private val conventionLogos = listOf(
-    R.drawable.unisabana to "Universidad de La Sabana",
-    R.drawable.rosario to "Universidad del Rosario",
-    R.drawable.sena to "SENA",
-    R.drawable.andes to "Universidad de Los Andes",
-    R.drawable.asturias to "Asturias Corporación Universitaria",
-    R.drawable.externado to "Universidad Externado de Colombia"
+    ConventionLogoItem(
+        R.drawable.unisabana,
+        "Universidad de La Sabana",
+        Color(0xFF1B3F9F)
+    ),
+    ConventionLogoItem(
+        R.drawable.rosario,
+        "Universidad del Rosario",
+        Color(0xFFD90921)
+    ),
+    ConventionLogoItem(
+        R.drawable.sena,
+        "SENA",
+        Color(0xFF39A900)
+    ),
+    ConventionLogoItem(
+        R.drawable.andes,
+        "Universidad de Los Andes",
+        Color(0xFFFFFE00)
+    ),
+    ConventionLogoItem(
+        R.drawable.asturias,
+        "Asturias Corporación Universitaria",
+        Color(0xFF100F0D)
+    ),
+    ConventionLogoItem(
+        R.drawable.externado,
+        "Universidad Externado de Colombia",
+        Color(0xFF05442F)
+    )
 )
 
 // Datos de las tarjetas de cursos
@@ -198,24 +230,24 @@ fun ELearningScreen() {
                 ) {
                     items(totalItems, key = { it }) { index ->
                         val actualIndex = index % conventionLogos.size
-                        val (drawableRes, contentDesc) = conventionLogos[actualIndex]
+                        val item = conventionLogos[actualIndex]
                         Box(
                             modifier = Modifier
                                 .size(itemSize)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(Color.White)
-                                .border(1.dp, Color(0xFFEEEEEE), RoundedCornerShape(12.dp)),
+                                .clip(CircleShape)
+                                .background(item.circleBackground)
+                                .border(1.dp, ConventionLogoRing, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             AsyncImage(
                                 model = ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
-                                    .data(drawableRes)
+                                    .data(item.drawableRes)
                                     .crossfade(true)
                                     .build(),
-                                contentDescription = contentDesc,
+                                contentDescription = item.contentDescription,
                                 modifier = Modifier
-                                    .fillMaxWidth(0.9f)
-                                    .fillMaxSize(0.9f),
+                                    .fillMaxSize()
+                                    .padding(10.dp),
                                 contentScale = ContentScale.Fit
                             )
                         }

@@ -88,3 +88,7 @@ curl -X POST "https://masina-chat-ai-793004668.development.catalystserverless.co
   curl -X POST "https://masina-chat-ai-793004668.development.catalystserverless.com/server/masina_chat_ai_function/" \
   -H "Content-Type: application/json" \
   -d '{"message": "Explícame la computación cuántica"}'
+
+
+
+
