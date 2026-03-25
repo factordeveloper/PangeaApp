@@ -74,7 +74,6 @@ private data class ResponsiveDimens(
 
 // Colores según el diseño de referencia (blanco, teal oscuro, fondo oscuro)
 private val TealDark = Color(0xFF0D5C5C)
-private val TealDarkAlt = Color(0xFF0A4A4A)
 private val IntroBackgroundDark = Color(0xFF1A3A3A)
 private val IntroBackgroundDarker = Color(0xFF0F2525)
 private val TitleColor = Color(0xFF1A2E2E)
@@ -314,16 +313,19 @@ fun HomeScreen(
                     DiscoverCircle(
                         label = "DigiTurno",
                         dimens = dimens,
+                        backgroundRes = R.drawable.digiturno,
                         onClick = onNavigateToDigiturno
                     )
                     DiscoverCircle(
                         label = "E-Learning",
                         dimens = dimens,
+                        backgroundRes = R.drawable.elearning,
                         onClick = onNavigateToELearning
                     )
                     DiscoverCircle(
                         label = "Desk",
                         dimens = dimens,
+                        backgroundRes = R.drawable.desk,
                         onClick = onNavigateToDesk
                     )
                 }
@@ -372,6 +374,7 @@ private fun TealInfoBlock(
 private fun DiscoverCircle(
     label: String,
     dimens: ResponsiveDimens,
+    backgroundRes: Int,
     onClick: () -> Unit
 ) {
     Card(
@@ -381,23 +384,39 @@ private fun DiscoverCircle(
             .clip(CircleShape)
             .clickable(onClick = onClick),
         shape = CircleShape,
-        colors = CardDefaults.cardColors(containerColor = TealDarkAlt),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(if (dimens.isTablet) 4.dp else (dimens.cardPadding.value / 2).dp),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = label,
-                fontSize = dimens.circleFontSize.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                maxLines = 1
+            Image(
+                painter = painterResource(backgroundRes),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.35f))
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(if (dimens.isTablet) 4.dp else (dimens.cardPadding.value / 2).dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = label,
+                    fontSize = dimens.circleFontSize.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
+                )
+            }
         }
     }
 }
