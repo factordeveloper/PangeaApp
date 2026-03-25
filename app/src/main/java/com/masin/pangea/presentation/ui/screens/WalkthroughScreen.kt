@@ -1,6 +1,7 @@
 package com.masin.pangea.presentation.ui.screens
 
 import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 import com.masin.pangea.R
 import com.masin.pangea.ui.theme.*
 
@@ -67,14 +69,50 @@ fun WalkthroughScreen(
         WalkthroughPage(
             title = "Asistente LIA",
             description = "Descubre a LIA, tu asistente virtual inteligente impulsada por IA. Usa comandos de voz para obtener respuestas y navegar por la aplicación instantáneamente.",
-            imageRes = R.drawable.lia_profile,
+            imageRes = R.drawable.lia_avatar,
             dominantColor = PangeaBlue // Azul Pangea
         )
     )
 
     var currentPage by remember { mutableStateOf(0) }
+
+    var ttsEngine by remember { mutableStateOf<TextToSpeech?>(null) }
+    var ttsReady by remember { mutableStateOf(false) }
+
+    DisposableEffect(Unit) {
+        val engineHolder = arrayOfNulls<TextToSpeech>(1)
+        engineHolder[0] = TextToSpeech(context, onTtsInit@ { status ->
+            val tts = engineHolder[0] ?: return@onTtsInit
+            if (status == TextToSpeech.SUCCESS) {
+                val latam = Locale.forLanguageTag("es-419")
+                val langOk = tts.setLanguage(latam)
+                if (langOk == TextToSpeech.LANG_MISSING_DATA ||
+                    langOk == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    tts.setLanguage(Locale("es", "ES"))
+                }
+                ttsReady = true
+            }
+        })
+        val engine = engineHolder[0]!!
+        ttsEngine = engine
+        onDispose {
+            engine.stop()
+            engine.shutdown()
+            ttsEngine = null
+            ttsReady = false
+        }
+    }
+
+    LaunchedEffect(currentPage, ttsReady) {
+        val tts = ttsEngine ?: return@LaunchedEffect
+        if (!ttsReady) return@LaunchedEffect
+        val page = pages[currentPage]
+        val utterance = "${page.title}. ${page.description}"
+        tts.speak(utterance, TextToSpeech.QUEUE_FLUSH, null, "walkthrough_$currentPage")
+    }
     
     val finishAction = {
+        ttsEngine?.stop()
         val sharedPrefs = context.getSharedPreferences("pangea_prefs", Context.MODE_PRIVATE)
         sharedPrefs.edit().putBoolean("is_first_run", false).apply()
         onFinishWalkthrough()
@@ -129,11 +167,11 @@ fun WalkthroughScreen(
                             contentDescription = page.title,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .clip(if (page.imageRes == R.drawable.lia_profile) CircleShape else RoundedCornerShape(0.dp)),
+                                .clip(if (page.imageRes == R.drawable.lia_avatar) CircleShape else RoundedCornerShape(0.dp)),
                             contentScale = ContentScale.Fit
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(48.dp))
                     
                     Text(
@@ -234,5 +272,15 @@ fun WalkthroughScreen(
                 }
             }
         }
+
+        Image(
+            painter = painterResource(id = R.drawable.lia_avatar),
+            contentDescription = "LIA",
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 12.dp, bottom = 100.dp)
+                .size(96.dp),
+            contentScale = ContentScale.Fit
+        )
     }
 }
