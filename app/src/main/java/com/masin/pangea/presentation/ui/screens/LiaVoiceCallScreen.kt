@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.masin.pangea.R
+import com.masin.pangea.data.config.PangeaTtsVoices
 import androidx.core.content.ContextCompat
 import com.masin.pangea.data.remote.ChatMessage
 import com.masin.pangea.data.remote.LiaApiResponse
@@ -107,7 +108,7 @@ fun LiaVoiceCallScreen(onBackPressed: () -> Unit = {}) {
     DisposableEffect(Unit) {
         tts = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                tts?.language = Locale("es", "ES")
+                tts?.let { engine -> PangeaTtsVoices.apply(engine, PangeaTtsVoices.liaChat) }
                 tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                     override fun onStart(utteranceId: String?) { isSpeaking = true }
                     override fun onDone(utteranceId: String?) { isSpeaking = false }

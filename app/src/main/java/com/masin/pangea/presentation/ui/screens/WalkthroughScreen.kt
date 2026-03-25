@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.util.Locale
 import com.masin.pangea.R
+import com.masin.pangea.data.config.PangeaTtsVoices
 import com.masin.pangea.ui.theme.*
 
 data class WalkthroughPage(
@@ -84,12 +84,7 @@ fun WalkthroughScreen(
         engineHolder[0] = TextToSpeech(context, onTtsInit@ { status ->
             val tts = engineHolder[0] ?: return@onTtsInit
             if (status == TextToSpeech.SUCCESS) {
-                val latam = Locale.forLanguageTag("es-419")
-                val langOk = tts.setLanguage(latam)
-                if (langOk == TextToSpeech.LANG_MISSING_DATA ||
-                    langOk == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    tts.setLanguage(Locale("es", "ES"))
-                }
+                PangeaTtsVoices.apply(tts, PangeaTtsVoices.walkthrough)
                 ttsReady = true
             }
         })
