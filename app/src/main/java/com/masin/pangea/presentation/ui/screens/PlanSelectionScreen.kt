@@ -26,12 +26,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.masin.pangea.R
 import com.masin.pangea.presentation.ui.utils.rememberAppDimens
 import com.masin.pangea.ui.theme.PANGEAappTheme
 import com.masin.pangea.ui.theme.PangeaCyan
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+data class ServiceIconItem(
+    val iconRes: Int,
+    val name: String,
+    val description: String
+)
 
 @Composable
 fun PlanSelectionScreen(
@@ -107,9 +116,9 @@ fun PlanSelectionScreen(
                             },
                             onAccess = onNavigateToHome,
                             icons = listOf(
-                                R.drawable.conoce,
-                                R.drawable.gestiona,
-                                R.drawable.soluciona
+                                ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                                ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
+                                ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio.")
                             ),
                             dimens = dimens
                         )
@@ -126,14 +135,14 @@ fun PlanSelectionScreen(
                             },
                             onAccess = onNavigateToHome,
                             icons = listOf(
-                                R.drawable.conoce,
-                                R.drawable.gestiona,
-                                R.drawable.soluciona,
-                                R.drawable.paga,
-                                R.drawable.conoce,
-                                R.drawable.gestiona,
-                                R.drawable.soluciona,
-                                R.drawable.paga
+                                ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                                ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
+                                ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio."),
+                                ServiceIconItem(R.drawable.paga, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
+                                ServiceIconItem(R.drawable.conoce, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
+                                ServiceIconItem(R.drawable.gestiona, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
+                                ServiceIconItem(R.drawable.soluciona, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
+                                ServiceIconItem(R.drawable.paga, "Pagos y Agendamiento", "Módulo para realizar pagos y agendar tus citas.")
                             ),
                             dimens = dimens
                         )
@@ -152,9 +161,9 @@ fun PlanSelectionScreen(
                     },
                     onAccess = onNavigateToHome,
                     icons = listOf(
-                        R.drawable.conoce,
-                        R.drawable.gestiona,
-                        R.drawable.soluciona
+                        ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                        ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
+                        ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio.")
                     ),
                     dimens = dimens
                 )
@@ -178,14 +187,14 @@ fun PlanSelectionScreen(
                     },
                     onAccess = onNavigateToHome,
                     icons = listOf(
-                        R.drawable.conoce,
-                        R.drawable.gestiona,
-                        R.drawable.soluciona,
-                        R.drawable.paga,
-                        R.drawable.conoce,
-                        R.drawable.gestiona,
-                        R.drawable.soluciona,
-                        R.drawable.paga
+                        ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                        ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
+                        ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio."),
+                        ServiceIconItem(R.drawable.paga, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
+                        ServiceIconItem(R.drawable.conoce, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
+                        ServiceIconItem(R.drawable.gestiona, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
+                        ServiceIconItem(R.drawable.soluciona, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
+                        ServiceIconItem(R.drawable.paga, "Pagos y Agendamiento", "Módulo para realizar pagos y agendar tus citas.")
                     ),
                     dimens = dimens
                 )
@@ -209,7 +218,7 @@ fun PlanCard(
     isSelected: Boolean,
     onSelect: () -> Unit,
     onAccess: () -> Unit,
-    icons: List<Int>,
+    icons: List<ServiceIconItem>,
     dimens: com.masin.pangea.presentation.ui.utils.AppDimens
 ) {
     val iconSize = (dimens.circleItemSize.value * 0.78f).dp        // ~70dp en compact
@@ -355,6 +364,9 @@ fun PlanCard(
                         for (j in 0 until numColumns) {
                             val index = i * numColumns + j
                             if (index < icons.size) {
+                                val item = icons[index]
+                                var showInfo by remember { mutableStateOf(false) }
+
                                 Box(
                                     modifier = Modifier
                                         .size(iconSize)
@@ -362,12 +374,93 @@ fun PlanCard(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Image(
-                                        painter = painterResource(id = icons[index]),
+                                        painter = painterResource(id = item.iconRes),
                                         contentDescription = null,
                                         modifier = Modifier.size(iconInnerSize),
                                         contentScale = ContentScale.Fit,
                                         colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
                                     )
+                                    
+                                    Box(
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentAlignment = Alignment.TopEnd
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .padding(2.dp)
+                                                .size(24.dp)
+                                                .background(PangeaCyan, CircleShape)
+                                                .clickable { showInfo = true },
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(text = "+", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                        }
+                                    }
+                                    
+                                    if (showInfo) {
+                                        Dialog(
+                                            onDismissRequest = { showInfo = false },
+                                            properties = DialogProperties(
+                                                dismissOnClickOutside = true,
+                                                dismissOnBackPress = true
+                                            )
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .background(Color.White, RoundedCornerShape(16.dp))
+                                            ) {
+                                                Column(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(horizontal = 24.dp, vertical = 32.dp),
+                                                    horizontalAlignment = Alignment.CenterHorizontally
+                                                ) {
+                                                    // Icono en el centro del modal
+                                                    Image(
+                                                        painter = painterResource(id = item.iconRes),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(64.dp),
+                                                        contentScale = ContentScale.Fit,
+                                                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(PangeaCyan)
+                                                    )
+                                                    
+                                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                                    Text(
+                                                        text = item.name,
+                                                        color = Color(0xFF0D2B2B),
+                                                        fontSize = 20.sp,
+                                                        fontWeight = FontWeight.Bold,
+                                                        textAlign = TextAlign.Center
+                                                    )
+
+                                                    Spacer(modifier = Modifier.height(12.dp))
+
+                                                    Text(
+                                                        text = item.description,
+                                                        color = Color.DarkGray,
+                                                        fontSize = 16.sp,
+                                                        fontWeight = FontWeight.Normal,
+                                                        textAlign = TextAlign.Center,
+                                                        lineHeight = 22.sp
+                                                    )
+                                                }
+                                                
+                                                // Botón cerrar (X)
+                                                Text(
+                                                    text = "X", 
+                                                    color = Color.Red, 
+                                                    fontWeight = FontWeight.Bold, 
+                                                    fontSize = 20.sp,
+                                                    modifier = Modifier
+                                                        .align(Alignment.TopEnd)
+                                                        .clickable { showInfo = false }
+                                                        .padding(16.dp)
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             } else {
                                 Spacer(modifier = Modifier.size(iconSize))
