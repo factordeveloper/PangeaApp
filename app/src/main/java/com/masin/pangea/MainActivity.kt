@@ -44,22 +44,21 @@ import android.widget.Toast
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import com.masin.pangea.ui.theme.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.res.painterResource
 
 // Duración del splash screen en milisegundos
@@ -164,9 +163,12 @@ fun MainScreen() {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = false,
         drawerContent = {
             ModalDrawerSheet {
-                DrawerHeader()
+                DrawerHeader(
+                    onCloseClick = { scope.launch { drawerState.close() } }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 BottomNavItem.items.forEach { item ->
                     val isSelected = currentRoute == item.route
@@ -263,39 +265,60 @@ fun MainScreen() {
 }
 
 @Composable
-fun DrawerHeader() {
+fun DrawerHeader(onCloseClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(176.dp)
+            .height(118.dp)
             .background(
                 Brush.linearGradient(
-                    colors = listOf(PangeaBlue, PangeaTeal, PangeaCyan, PangeaGreen)
+                    0f to PangeaBlue,
+                    0.32f to PangeaTeal,
+                    0.58f to Color(0xFF003D5C),
+                    1f to Color(0xFF001A26)
                 )
             )
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Bottom
+            .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.lia_profile),
-            contentDescription = "User Profile",
-            modifier = Modifier
-                .size(70.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            text = "Asistente LIA",
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
-        Text(
-            text = "Pangea App",
-            color = Color.White.copy(alpha = 0.8f),
-            fontSize = 14.sp
-        )
+        IconButton(
+            onClick = onCloseClick,
+            modifier = Modifier.padding(0.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = "Cerrar menú",
+                tint = Color.White
+            )
+        }
+        Spacer(modifier = Modifier.height(2.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp, end = 8.dp)
+            ) {
+                Text(
+                    text = "Asistente LIA",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Text(
+                    text = "Pangea App",
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 14.sp
+                )
+            }
+            Image(
+                painter = painterResource(id = R.drawable.lia_profile),
+                contentDescription = "Libélula LIA",
+                modifier = Modifier.size(52.dp),
+                contentScale = ContentScale.Fit
+            )
+        }
     }
 }
 
