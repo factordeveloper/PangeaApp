@@ -266,10 +266,11 @@ fun MainScreen() {
 
 @Composable
 fun DrawerHeader(onCloseClick: () -> Unit) {
+    val dimens = com.masin.pangea.presentation.ui.utils.rememberAppDimens()
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(118.dp)
+            .height(dimens.avatarSize * 2.8f)
             .background(
                 Brush.linearGradient(
                     0f to PangeaBlue,
@@ -278,7 +279,7 @@ fun DrawerHeader(onCloseClick: () -> Unit) {
                     1f to Color(0xFF001A26)
                 )
             )
-            .padding(horizontal = 8.dp, vertical = 6.dp)
+            .padding(horizontal = dimens.spacingSmall, vertical = dimens.spacingSmall)
     ) {
         IconButton(
             onClick = onCloseClick,
@@ -298,24 +299,24 @@ fun DrawerHeader(onCloseClick: () -> Unit) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 8.dp, end = 8.dp)
+                    .padding(start = dimens.spacingSmall, end = dimens.spacingSmall)
             ) {
                 Text(
                     text = "Asistente LIA",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = dimens.fontBody
                 )
                 Text(
                     text = "Pangea App",
                     color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 14.sp
+                    fontSize = dimens.fontCaption
                 )
             }
             Image(
                 painter = painterResource(id = R.drawable.lia_profile),
                 contentDescription = "Libélula LIA",
-                modifier = Modifier.size(52.dp),
+                modifier = Modifier.size(dimens.avatarSize * 1.3f),
                 contentScale = ContentScale.Fit
             )
         }

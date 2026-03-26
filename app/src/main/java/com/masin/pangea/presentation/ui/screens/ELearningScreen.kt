@@ -14,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -67,6 +69,8 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.masin.pangea.R
+import com.masin.pangea.presentation.ui.utils.WindowSizeClass
+import com.masin.pangea.presentation.ui.utils.rememberAppDimens
 import com.masin.pangea.ui.theme.PANGEAappTheme
 import kotlinx.coroutines.launch
 
@@ -137,9 +141,11 @@ private val courseItems = listOf(
 
 /**
  * Pantalla del módulo E-Learning con carrusel de convenios y lista de cursos.
+ * Adaptativa para móviles y tablets.
  */
 @Composable
 fun ELearningScreen() {
+    val dimens = rememberAppDimens()
     var selectedCourseTitle by remember { mutableStateOf<String?>(null) }
 
     selectedCourseTitle?.let { title ->
@@ -149,150 +155,196 @@ fun ELearningScreen() {
         )
     }
 
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(ScreenBackground)
-            .verticalScroll(rememberScrollState())
     ) {
-        // Sección superior: título y descripción
+        val contentMaxWidth = dimens.maxContentWidth
+        val horizontalPad = ((maxWidth - contentMaxWidth) / 2).coerceAtLeast(0.dp)
+
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = "E-LEARNING",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextDark
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "En este espacio encontrarás toda la información que necesitas.",
-                fontSize = 14.sp,
-                color = TextGray,
-                lineHeight = 20.sp,
-                textAlign = TextAlign.Center
-            )
-        }
-
-        // Sección Convenios: carrusel de logos
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Convenios",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextDark,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            // Carrusel infinito: repetimos los items muchas veces y empezamos en el centro
-            val repeatCount = 500
-            val totalItems = repeatCount * conventionLogos.size
-            val initialIndex = totalItems / 2
-            val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
-            val scope = rememberCoroutineScope()
-            val itemSize = 120.dp
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+            // Sección superior: título y descripción
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dimens.paddingSection + horizontalPad, vertical = dimens.spacingLarge),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconButton(
-                    onClick = {
-                        val currentIndex = listState.firstVisibleItemIndex
-                        scope.launch {
-                            listState.animateScrollToItem((currentIndex - 1 + totalItems) % totalItems)
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ChevronLeft,
-                        contentDescription = "Anterior",
-                        modifier = Modifier.size(32.dp),
-                        tint = Color.Black
-                    )
-                }
-
-                LazyRow(
-                    state = listState,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(itemSize + 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(horizontal = 8.dp)
-                ) {
-                    items(totalItems, key = { it }) { index ->
-                        val actualIndex = index % conventionLogos.size
-                        val item = conventionLogos[actualIndex]
-                        Box(
-                            modifier = Modifier
-                                .size(itemSize)
-                                .clip(CircleShape)
-                                .background(item.circleBackground)
-                                .border(1.dp, ConventionLogoRing, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            AsyncImage(
-                                model = ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
-                                    .data(item.drawableRes)
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = item.contentDescription,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(10.dp),
-                                contentScale = ContentScale.Fit
-                            )
-                        }
-                    }
-                }
-
-                IconButton(
-                    onClick = {
-                        val currentIndex = listState.firstVisibleItemIndex
-                        scope.launch {
-                            listState.animateScrollToItem((currentIndex + 1) % totalItems)
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = "Siguiente",
-                        modifier = Modifier.size(32.dp),
-                        tint = Color.Black
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Lista de tarjetas de contenido
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            courseItems.forEach { course ->
-                CourseCard(
-                    title = course.title,
-                    duration = course.duration,
-                    thumbnailResId = course.thumbnailPlaceholder,
-                    isHighlighted = course.isHighlighted,
-                    onClick = { selectedCourseTitle = course.title }
+                Text(
+                    text = "E-LEARNING",
+                    fontSize = dimens.fontTitle,
+                    fontWeight = FontWeight.Bold,
+                    color = TextDark
+                )
+                Spacer(modifier = Modifier.height(dimens.spacingMedium))
+                Text(
+                    text = "En este espacio encontrarás toda la información que necesitas.",
+                    fontSize = dimens.fontBody,
+                    color = TextGray,
+                    lineHeight = dimens.lineHeightBody,
+                    textAlign = TextAlign.Center
                 )
             }
-        }
 
-        Spacer(modifier = Modifier.height(24.dp))
+            // Sección Convenios: carrusel de logos
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = horizontalPad),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Convenios",
+                    fontSize = dimens.fontSubtitle,
+                    fontWeight = FontWeight.Bold,
+                    color = TextDark,
+                    modifier = Modifier.padding(bottom = dimens.spacingMedium)
+                )
+
+                // Carrusel infinito: repetimos los items muchas veces y empezamos en el centro
+                val repeatCount = 200
+                val totalItems = repeatCount * conventionLogos.size
+                val initialIndex = totalItems / 2
+                val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
+                val scope = rememberCoroutineScope()
+                val itemSize = dimens.circleItemSize
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    IconButton(
+                        onClick = {
+                            val currentIndex = listState.firstVisibleItemIndex
+                            scope.launch {
+                                listState.animateScrollToItem((currentIndex - 1 + totalItems) % totalItems)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ChevronLeft,
+                            contentDescription = "Anterior",
+                            modifier = Modifier.size(dimens.iconSizeLarge),
+                            tint = Color.Black
+                        )
+                    }
+
+                    LazyRow(
+                        state = listState,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(itemSize + dimens.spacingMedium),
+                        horizontalArrangement = Arrangement.spacedBy(dimens.spacingMedium),
+                        contentPadding = PaddingValues(horizontal = dimens.spacingSmall)
+                    ) {
+                        items(totalItems, key = { it }) { index ->
+                            val actualIndex = index % conventionLogos.size
+                            val item = conventionLogos[actualIndex]
+                            Box(
+                                modifier = Modifier
+                                    .size(itemSize)
+                                    .clip(CircleShape)
+                                    .background(item.circleBackground)
+                                    .border(1.dp, ConventionLogoRing, CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                AsyncImage(
+                                    model = ImageRequest.Builder(androidx.compose.ui.platform.LocalContext.current)
+                                        .data(item.drawableRes)
+                                        .crossfade(true)
+                                        .build(),
+                                    contentDescription = item.contentDescription,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding((itemSize.value * 0.08f).dp),
+                                    contentScale = ContentScale.Fit
+                                )
+                            }
+                        }
+                    }
+
+                    IconButton(
+                        onClick = {
+                            val currentIndex = listState.firstVisibleItemIndex
+                            scope.launch {
+                                listState.animateScrollToItem((currentIndex + 1) % totalItems)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = "Siguiente",
+                            modifier = Modifier.size(dimens.iconSizeLarge),
+                            tint = Color.Black
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimens.spacingLarge))
+
+            // Lista de tarjetas de contenido
+            // En tablet: grid de 2 columnas
+            if (dimens.isTablet) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dimens.paddingScreen + horizontalPad),
+                    verticalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
+                ) {
+                    val rows = courseItems.chunked(2)
+                    rows.forEach { rowItems ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
+                        ) {
+                            rowItems.forEach { course ->
+                                Box(modifier = Modifier.weight(1f)) {
+                                    CourseCard(
+                                        title = course.title,
+                                        duration = course.duration,
+                                        thumbnailResId = course.thumbnailPlaceholder,
+                                        isHighlighted = course.isHighlighted,
+                                        onClick = { selectedCourseTitle = course.title },
+                                        dimens = dimens
+                                    )
+                                }
+                            }
+                            // Si la fila tiene solo 1 item, añadir spacer para equilibrar
+                            if (rowItems.size < 2) {
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+                        }
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dimens.paddingScreen),
+                    verticalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
+                ) {
+                    courseItems.forEach { course ->
+                        CourseCard(
+                            title = course.title,
+                            duration = course.duration,
+                            thumbnailResId = course.thumbnailPlaceholder,
+                            isHighlighted = course.isHighlighted,
+                            onClick = { selectedCourseTitle = course.title },
+                            dimens = dimens
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimens.bottomBarSpacing))
+        }
     }
 }
 
@@ -301,6 +353,7 @@ private fun ComingSoonCourseDialog(
     courseTitle: String,
     onDismiss: () -> Unit
 ) {
+    val dimens = rememberAppDimens()
     val scaleAnim = remember(courseTitle) { Animatable(0.88f) }
     LaunchedEffect(courseTitle) {
         scaleAnim.snapTo(0.88f)
@@ -334,7 +387,8 @@ private fun ComingSoonCourseDialog(
     ) {
         Surface(
             modifier = Modifier
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = dimens.spacingLarge)
+                .widthIn(max = if (dimens.isTablet) 480.dp else 400.dp)
                 .fillMaxWidth()
                 .graphicsLayer {
                     scaleX = scaleAnim.value
@@ -361,13 +415,13 @@ private fun ComingSoonCourseDialog(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .padding(top = 20.dp, bottom = 24.dp),
+                        .padding(horizontal = dimens.spacingLarge)
+                        .padding(top = dimens.paddingSection, bottom = dimens.spacingLarge),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(72.dp)
+                            .size(dimens.thumbnailSize)
                             .graphicsLayer {
                                 scaleX = iconPulse
                                 scaleY = iconPulse
@@ -379,47 +433,47 @@ private fun ComingSoonCourseDialog(
                         Icon(
                             imageVector = Icons.Filled.Schedule,
                             contentDescription = null,
-                            modifier = Modifier.size(36.dp),
+                            modifier = Modifier.size(dimens.iconSizeLarge),
                             tint = CardAccentTeal
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(18.dp))
+                    Spacer(modifier = Modifier.height(dimens.spacingMedium))
 
                     Text(
                         text = "Próximamente",
-                        fontSize = 13.sp,
+                        fontSize = dimens.fontCaption,
                         fontWeight = FontWeight.SemiBold,
                         color = CardAccentTeal,
                         letterSpacing = 1.2.sp
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(dimens.spacingSmall))
 
                     Text(
                         text = courseTitle,
-                        fontSize = 20.sp,
+                        fontSize = dimens.fontSubtitle,
                         fontWeight = FontWeight.Bold,
                         color = TextDark,
                         textAlign = TextAlign.Center
                     )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(dimens.spacingMedium))
 
                     Text(
                         text = "Contenido disponible próximamente",
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
+                        fontSize = dimens.fontBody,
+                        lineHeight = dimens.lineHeightBody,
                         color = TextGray,
                         textAlign = TextAlign.Center
                     )
 
-                    Spacer(modifier = Modifier.height(22.dp))
+                    Spacer(modifier = Modifier.height(dimens.spacingLarge))
 
                     Button(
                         onClick = onDismiss,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(dimens.cardCornerRadius),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CardAccentTeal,
                             contentColor = Color.White
@@ -432,6 +486,7 @@ private fun ComingSoonCourseDialog(
                         Text(
                             text = "Entendido",
                             fontWeight = FontWeight.SemiBold,
+                            fontSize = dimens.fontBody,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     }
@@ -447,7 +502,8 @@ private fun CourseCard(
     duration: String?,
     thumbnailResId: Int,
     isHighlighted: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
 ) {
     val cardBackground = if (isHighlighted) CardAccentTeal.copy(alpha = 0.15f) else CardBackgroundLight
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -456,21 +512,21 @@ private fun CourseCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(dimens.cardCornerRadius),
         colors = CardDefaults.cardColors(containerColor = cardBackground),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(dimens.paddingCard),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Miniatura
             Box(
                 modifier = Modifier
-                    .size(72.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .size(dimens.thumbnailSize)
+                    .clip(RoundedCornerShape(dimens.spacingSmall))
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
@@ -485,7 +541,7 @@ private fun CourseCard(
                 )
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(dimens.spacingMedium))
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(
@@ -494,25 +550,25 @@ private fun CourseCard(
                     Icon(
                         imageVector = Icons.Default.PlayCircleOutline,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp),
+                        modifier = Modifier.size(dimens.iconSizeSmall),
                         tint = TextGray
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = title,
-                        fontSize = 16.sp,
+                        fontSize = dimens.fontBody,
                         fontWeight = FontWeight.Bold,
                         color = TextDark
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(dimens.spacingSmall))
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(dimens.spacingSmall)
                 ) {
-                    PillChip(text = "Definición")
-                    duration?.let { PillChip(text = it) }
+                    PillChip(text = "Definición", dimens = dimens)
+                    duration?.let { PillChip(text = it, dimens = dimens) }
                 }
             }
         }
@@ -520,15 +576,18 @@ private fun CourseCard(
 }
 
 @Composable
-private fun PillChip(text: String) {
+private fun PillChip(
+    text: String,
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
+) {
     Box(
         modifier = Modifier
             .border(1.dp, PillBorder, RoundedCornerShape(16.dp))
-            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .padding(horizontal = (10f * dimens.scaleFactor.coerceIn(0.9f, 1.3f)).dp, vertical = 4.dp)
     ) {
         Text(
             text = text,
-            fontSize = 12.sp,
+            fontSize = dimens.fontCaption,
             color = TextGray
         )
     }

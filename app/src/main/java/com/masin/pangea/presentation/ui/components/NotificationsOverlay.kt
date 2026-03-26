@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.masin.pangea.presentation.ui.utils.rememberAppDimens
 import com.masin.pangea.ui.theme.PangeaGreen
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -90,9 +91,20 @@ fun NotificationsOverlay(
     onDismiss: () -> Unit
 ) {
     val density = LocalDensity.current
+    val dimens = rememberAppDimens()
     val statusBarTop = WindowInsets.statusBars.getTop(density)
     val statusBarTopDp: Dp = density.run { statusBarTop.toDp() }
     val panelTopOffset = statusBarTopDp + HeaderHeight
+
+    // Panel de ancho responsivo: adaptado al tamaño de pantalla
+    val panelWidth = when {
+        dimens.isTablet -> minOf(dimens.screenWidthDp * 0.45f, 420f).dp
+        else -> minOf(dimens.screenWidthDp * 0.88f, 340f).dp
+    }
+    val panelHeight = when {
+        dimens.isTablet -> minOf(dimens.screenHeightDp * 0.65f, 600f).dp
+        else -> minOf(dimens.screenHeightDp * 0.55f, 520f).dp
+    }
 
     val notifications = remember {
         listOf(
@@ -101,7 +113,7 @@ fun NotificationsOverlay(
                 title = "Ticket actualizado",
                 body = "El ticket #SDH-4521 ha sido actualizado. Revisa los cambios en el portal de casos.",
                 ticketId = "SDH-4521",
-                timestamp = System.currentTimeMillis() - 15 * 60 * 1000,  // Hace 15 min
+                timestamp = System.currentTimeMillis() - 15 * 60 * 1000,
                 type = NotificationType.TICKET_UPDATED,
                 isRead = false
             ),
@@ -110,7 +122,7 @@ fun NotificationsOverlay(
                 title = "Nuevo comentario",
                 body = "Se agregó un comentario en el ticket #SDH-4489 sobre tu solicitud de devolución.",
                 ticketId = "SDH-4489",
-                timestamp = System.currentTimeMillis() - 2 * 60 * 60 * 1000,  // Hace 2 horas
+                timestamp = System.currentTimeMillis() - 2 * 60 * 60 * 1000,
                 type = NotificationType.NEW_COMMENT,
                 isRead = false
             ),
@@ -119,7 +131,7 @@ fun NotificationsOverlay(
                 title = "Estado cambiado",
                 body = "El ticket #SDH-4401 pasó de 'En proceso' a 'Resuelto'.",
                 ticketId = "SDH-4401",
-                timestamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000,  // Hace 1 día
+                timestamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000,
                 type = NotificationType.STATUS_CHANGED,
                 isRead = true
             ),
@@ -128,7 +140,7 @@ fun NotificationsOverlay(
                 title = "Ticket asignado",
                 body = "Se te asignó el ticket #SDH-4530 para seguimiento de tu declaración complementaria.",
                 ticketId = "SDH-4530",
-                timestamp = System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000,  // Hace 3 días
+                timestamp = System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000,
                 type = NotificationType.ASSIGNED,
                 isRead = true
             )
@@ -147,9 +159,9 @@ fun NotificationsOverlay(
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .width(320.dp)
-                .height(540.dp + PeakHeight)
-                .padding(top = panelTopOffset - PeakHeight, end = 16.dp)
+                .width(panelWidth)
+                .height(panelHeight + PeakHeight)
+                .padding(top = panelTopOffset - PeakHeight, end = dimens.spacingMedium)
                 .clip(RoundedCornerShape(16.dp))
                 .clickable(
                     indication = null,
@@ -163,7 +175,7 @@ fun NotificationsOverlay(
                     .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
                     .background(NotificationBackground)
             ) {
-                // Header (sin botón X - se cierra tocando fuera)
+                // Header
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -175,27 +187,27 @@ fun NotificationsOverlay(
                 ) {
                     Text(
                         text = "Notificaciones",
-                        fontSize = 18.sp,
+                        fontSize = dimens.fontSubtitle,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
                 }
 
-            // Lista de notificaciones (todas en scroll, visibles de a 3)
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(max = 500.dp)
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(notifications) { notification ->
-                    NotificationCard(notification = notification)
+                // Lista de notificaciones
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(max = panelHeight - 56.dp)
+                        .padding(dimens.spacingSmall),
+                    verticalArrangement = Arrangement.spacedBy(dimens.spacingSmall)
+                ) {
+                    items(notifications) { notification ->
+                        NotificationCard(notification = notification, dimens = dimens)
+                    }
                 }
             }
-            }
 
-            // Pico triangular saliendo desde la campana, color rojo del header
+            // Pico triangular
             Canvas(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -215,16 +227,19 @@ fun NotificationsOverlay(
 }
 
 @Composable
-private fun NotificationCard(notification: NotificationItem) {
+private fun NotificationCard(
+    notification: NotificationItem,
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
+) {
     val timeAgo = formatTimeAgo(notification.timestamp)
-    
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(CardBackground)
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(dimens.spacingMedium),
+        horizontalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
     ) {
         // Indicador de no leído + icono
         Box {
@@ -240,14 +255,14 @@ private fun NotificationCard(notification: NotificationItem) {
                 imageVector = notification.type.icon,
                 contentDescription = null,
                 tint = if (notification.isRead) TextLightGray else PangeaGreen,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(dimens.iconSizeLarge)
             )
         }
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = notification.title,
-                fontSize = 14.sp,
+                fontSize = dimens.fontBody,
                 fontWeight = if (notification.isRead) FontWeight.Medium else FontWeight.Bold,
                 color = Color.Black,
                 maxLines = 1,
@@ -256,7 +271,7 @@ private fun NotificationCard(notification: NotificationItem) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = notification.body,
-                fontSize = 12.sp,
+                fontSize = dimens.fontCaption,
                 color = TextGray,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -264,7 +279,7 @@ private fun NotificationCard(notification: NotificationItem) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = timeAgo,
-                fontSize = 11.sp,
+                fontSize = dimens.fontSmall,
                 color = TextLightGray
             )
         }

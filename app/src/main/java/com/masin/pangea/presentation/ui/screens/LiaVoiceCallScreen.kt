@@ -55,6 +55,7 @@ import com.masin.pangea.data.remote.ChatMessage
 import com.masin.pangea.data.remote.LiaApiResponse
 import com.masin.pangea.data.remote.LiaApiService
 import com.masin.pangea.data.remote.ServerStatus
+import com.masin.pangea.presentation.ui.utils.rememberAppDimens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -204,6 +205,10 @@ fun LiaVoiceCallScreen(onBackPressed: () -> Unit = {}) {
         }
     }
 
+    val dimens = rememberAppDimens()
+    // Ancho máximo de burbuja: 70% del ancho en compact, 55% en tablet
+    val bubbleMaxWidthFraction = if (dimens.isTablet) 0.55f else 0.70f
+
     Column(modifier = Modifier.fillMaxSize().background(ChatBackground)) {
         BackHandler(enabled = true) {
             stopSpeaking()
@@ -212,6 +217,7 @@ fun LiaVoiceCallScreen(onBackPressed: () -> Unit = {}) {
 
         LiaChatHeader(
             serverStatus = serverStatus,
+            dimens = dimens,
             onClearChat = {
                 stopSpeaking()
                 errorMessage = null
@@ -232,11 +238,19 @@ fun LiaVoiceCallScreen(onBackPressed: () -> Unit = {}) {
         Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
             LazyColumn(
                 state = listState,
-                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = dimens.paddingScreen, vertical = dimens.spacingSmall),
+                verticalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
             ) {
-                items(messages) { message -> LiaChatBubble(message = message) }
-                if (isLoading) { item { LiaTypingIndicator() } }
+                items(messages) { message ->
+                    LiaChatBubble(
+                        message = message,
+                        bubbleMaxWidthFraction = bubbleMaxWidthFraction,
+                        dimens = dimens
+                    )
+                }
+                if (isLoading) { item { LiaTypingIndicator(dimens = dimens) } }
             }
         }
 
@@ -248,38 +262,58 @@ fun LiaVoiceCallScreen(onBackPressed: () -> Unit = {}) {
             isListening = isListening,
             isSpeaking = isSpeaking,
             interimTranscript = interimTranscript,
-            onMicClick = { if (isListening) stopListening() else startListening() }
+            onMicClick = { if (isListening) stopListening() else startListening() },
+            dimens = dimens
         )
     }
 }
 
 @Composable
-private fun LiaChatHeader(serverStatus: ServerStatus, onClearChat: () -> Unit) {
+private fun LiaChatHeader(
+    serverStatus: ServerStatus,
+    onClearChat: () -> Unit,
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
+) {
     Surface(modifier = Modifier.fillMaxWidth(), color = HeaderCyan, shadowElevation = 4.dp) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimens.paddingScreen, vertical = dimens.spacingMedium),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.lia_avatar),
                     contentDescription = "LIA",
-                    modifier = Modifier.size(40.dp).clip(CircleShape),
+                    modifier = Modifier.size(dimens.avatarSize).clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
                 Column {
-                    Text("LIA", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text("Asistente de voz", color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
+                    Text("LIA", color = Color.White, fontSize = dimens.fontSubtitle, fontWeight = FontWeight.Bold)
+                    Text("Asistente de voz", color = Color.White.copy(alpha = 0.8f), fontSize = dimens.fontCaption)
                 }
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                LiaStatusIndicator(status = serverStatus)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(dimens.spacingSmall),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                LiaStatusIndicator(status = serverStatus, dimens = dimens)
                 IconButton(
                     onClick = onClearChat,
-                    modifier = Modifier.size(36.dp).background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+                    modifier = Modifier
+                        .size(dimens.iconSizeLarge)
+                        .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
                 ) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Limpiar chat", tint = Color.White)
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Limpiar chat",
+                        tint = Color.White,
+                        modifier = Modifier.size(dimens.iconSizeMedium)
+                    )
                 }
             }
         }
@@ -287,7 +321,10 @@ private fun LiaChatHeader(serverStatus: ServerStatus, onClearChat: () -> Unit) {
 }
 
 @Composable
-private fun LiaStatusIndicator(status: ServerStatus) {
+private fun LiaStatusIndicator(
+    status: ServerStatus,
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
+) {
     val statusColor = when (status) {
         is ServerStatus.Connected -> Color(0xFF6BCB77)
         is ServerStatus.Disconnected -> Color(0xFFFF6B6B)
@@ -307,17 +344,19 @@ private fun LiaStatusIndicator(status: ServerStatus) {
 
     Surface(color = Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(20.dp)) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            modifier = Modifier.padding(horizontal = dimens.spacingMedium, vertical = 6.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier.size(8.dp).background(
-                    statusColor.copy(alpha = if (status is ServerStatus.Checking) alpha else 1f),
-                    CircleShape
-                )
+                modifier = Modifier
+                    .size(8.dp)
+                    .background(
+                        statusColor.copy(alpha = if (status is ServerStatus.Checking) alpha else 1f),
+                        CircleShape
+                    )
             )
-            Text(text = statusText, color = Color.White, fontSize = 12.sp)
+            Text(text = statusText, color = Color.White, fontSize = dimens.fontCaption)
         }
     }
 }
@@ -364,21 +403,33 @@ private fun LiaSpeakingIndicator(onStop: () -> Unit) {
 }
 
 @Composable
-private fun LiaChatBubble(message: ChatMessage) {
+private fun LiaChatBubble(
+    message: ChatMessage,
+    bubbleMaxWidthFraction: Float = 0.70f,
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
+) {
     val isUser = message.role == "user"
     val timeFormat = remember { SimpleDateFormat("HH:mm", Locale.getDefault()) }
+    val avatarSize = dimens.avatarSize
 
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
+    ) {
         if (!isUser) {
             Image(
                 painter = painterResource(id = R.drawable.lia_avatar),
                 contentDescription = "LIA",
-                modifier = Modifier.size(36.dp).clip(CircleShape),
+                modifier = Modifier.size(avatarSize).clip(CircleShape),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(dimens.spacingSmall))
         }
-        Column(horizontalAlignment = if (isUser) Alignment.End else Alignment.Start, modifier = Modifier.widthIn(max = 280.dp)) {
+        // Ancho máximo dinámico: fracción del ancho total de la pantalla
+        Column(
+            horizontalAlignment = if (isUser) Alignment.End else Alignment.Start,
+            modifier = Modifier.fillMaxWidth(bubbleMaxWidthFraction)
+        ) {
             Surface(
                 color = if (isUser) UserBubbleColor else AssistantBubbleColor,
                 shape = RoundedCornerShape(
@@ -391,42 +442,62 @@ private fun LiaChatBubble(message: ChatMessage) {
                 Text(
                     text = message.content,
                     color = if (isUser) Color.White else Color(0xFF333333),
-                    fontSize = 15.sp, lineHeight = 22.sp,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
+                    fontSize = dimens.fontBody,
+                    lineHeight = dimens.lineHeightBody,
+                    modifier = Modifier.padding(horizontal = dimens.spacingMedium, vertical = dimens.spacingSmall + 2.dp)
                 )
             }
             Text(
                 text = timeFormat.format(Date(message.timestamp)),
-                color = Color(0xFF999999), fontSize = 11.sp,
+                color = Color(0xFF999999),
+                fontSize = dimens.fontSmall,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp)
             )
         }
         if (isUser) {
-            Spacer(modifier = Modifier.width(8.dp))
-            Surface(modifier = Modifier.size(36.dp), shape = CircleShape, color = HeaderCyan) {
-                Box(contentAlignment = Alignment.Center) { Text("👤", fontSize = 18.sp) }
+            Spacer(modifier = Modifier.width(dimens.spacingSmall))
+            Surface(
+                modifier = Modifier.size(avatarSize),
+                shape = CircleShape,
+                color = HeaderCyan
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text("👤", fontSize = dimens.fontSubtitle)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun LiaTypingIndicator() {
+private fun LiaTypingIndicator(
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
+) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         Image(
             painter = painterResource(id = R.drawable.lia_avatar),
             contentDescription = "LIA",
-            modifier = Modifier.size(36.dp).clip(CircleShape),
+            modifier = Modifier.size(dimens.avatarSize).clip(CircleShape),
             contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Surface(color = AssistantBubbleColor, shape = RoundedCornerShape(18.dp, 18.dp, 18.dp, 4.dp), shadowElevation = 2.dp) {
-            Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        Spacer(modifier = Modifier.width(dimens.spacingSmall))
+        Surface(
+            color = AssistantBubbleColor,
+            shape = RoundedCornerShape(18.dp, 18.dp, 18.dp, 4.dp),
+            shadowElevation = 2.dp
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = dimens.paddingCard, vertical = dimens.spacingMedium),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
                 repeat(3) { index ->
                     val infiniteTransition = rememberInfiniteTransition(label = "typing_$index")
                     val offsetY by infiniteTransition.animateFloat(
                         initialValue = 0f, targetValue = -8f,
-                        animationSpec = infiniteRepeatable(animation = tween(400, delayMillis = index * 150), repeatMode = RepeatMode.Reverse),
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(400, delayMillis = index * 150),
+                            repeatMode = RepeatMode.Reverse
+                        ),
                         label = "dot_$index"
                     )
                     Box(modifier = Modifier.size(8.dp).offset(y = offsetY.dp).background(HeaderCyan, CircleShape))
@@ -445,23 +516,31 @@ private fun LiaInputFooter(
     isListening: Boolean,
     isSpeaking: Boolean,
     interimTranscript: String,
-    onMicClick: () -> Unit
+    onMicClick: () -> Unit,
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
 ) {
     val density = LocalDensity.current
     val imeBottom = WindowInsets.ime.getBottom(density)
     val isImeVisible = imeBottom > 0
+    val micSize = if (dimens.isTablet) 96.dp else 80.dp
 
     Surface(modifier = Modifier.fillMaxWidth(), color = Color.White, shadowElevation = 8.dp) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
-                .padding(top = 8.dp, bottom = if (isImeVisible) 12.dp else 56.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimens.paddingScreen)
+                .padding(top = dimens.spacingSmall, bottom = if (isImeVisible) dimens.spacingMedium else dimens.spacingXLarge + 8.dp)
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(dimens.spacingSmall)
+            ) {
                 OutlinedTextField(
                     value = textInput,
                     onValueChange = onTextChange,
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Escribe aquí...", color = Color.Gray) },
+                    placeholder = { Text("Escribe aquí...", color = Color.Gray, fontSize = dimens.fontBody) },
                     enabled = !isLoading && !isListening,
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -479,33 +558,53 @@ private fun LiaInputFooter(
                         containerColor = HeaderCyan,
                         disabledContainerColor = HeaderCyan.copy(alpha = 0.5f)
                     ),
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(dimens.buttonHeight)
                 ) {
-                    Icon(imageVector = Icons.Default.Send, contentDescription = "Enviar", tint = Color.White)
+                    Icon(
+                        imageVector = Icons.Default.Send,
+                        contentDescription = "Enviar",
+                        tint = Color.White,
+                        modifier = Modifier.size(dimens.iconSizeMedium)
+                    )
                 }
             }
 
             if (!isImeVisible) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier = Modifier.height(dimens.spacingMedium))
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     AnimatedVisibility(visible = isListening && interimTranscript.isNotEmpty()) {
-                        Surface(color = HeaderCyan.copy(alpha = 0.1f), shape = RoundedCornerShape(20.dp), modifier = Modifier.padding(bottom = 8.dp)) {
+                        Surface(
+                            color = HeaderCyan.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier.padding(bottom = dimens.spacingSmall)
+                        ) {
                             Text(
                                 text = interimTranscript,
-                                color = HeaderCyan, fontStyle = FontStyle.Italic, fontSize = 14.sp,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                color = HeaderCyan,
+                                fontStyle = FontStyle.Italic,
+                                fontSize = dimens.fontBody,
+                                modifier = Modifier.padding(horizontal = dimens.paddingCard, vertical = dimens.spacingSmall)
                             )
                         }
                     }
-                    LiaMicrophoneButton(isListening = isListening, isDisabled = isLoading || isSpeaking, onClick = onMicClick)
-                    Spacer(modifier = Modifier.height(8.dp))
+                    LiaMicrophoneButton(
+                        isListening = isListening,
+                        isDisabled = isLoading || isSpeaking,
+                        onClick = onMicClick,
+                        size = micSize
+                    )
+                    Spacer(modifier = Modifier.height(dimens.spacingSmall))
                     Text(
                         text = when {
                             isListening -> "Hablando... Toca para detener"
                             isLoading -> "Esperando respuesta..."
                             else -> "Toca el micrófono para hablar"
                         },
-                        color = Color(0xFF888888), fontSize = 13.sp
+                        color = Color(0xFF888888),
+                        fontSize = dimens.fontCaption
                     )
                 }
             }
@@ -514,7 +613,12 @@ private fun LiaInputFooter(
 }
 
 @Composable
-private fun LiaMicrophoneButton(isListening: Boolean, isDisabled: Boolean, onClick: () -> Unit) {
+private fun LiaMicrophoneButton(
+    isListening: Boolean,
+    isDisabled: Boolean,
+    onClick: () -> Unit,
+    size: androidx.compose.ui.unit.Dp = 80.dp
+) {
     val infiniteTransition = rememberInfiniteTransition(label = "mic_pulse")
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f, targetValue = if (isListening) 1.1f else 1f,
@@ -523,21 +627,37 @@ private fun LiaMicrophoneButton(isListening: Boolean, isDisabled: Boolean, onCli
     )
     val backgroundModifier = when {
         isDisabled -> Modifier.background(Color(0xFFCCCCCC), CircleShape)
-        isListening -> Modifier.background(brush = Brush.linearGradient(listOf(Color(0xFFF5576C), Color(0xFFF093FB))), shape = CircleShape)
+        isListening -> Modifier.background(
+            brush = Brush.linearGradient(listOf(Color(0xFFF5576C), Color(0xFFF093FB))),
+            shape = CircleShape
+        )
         else -> Modifier.background(HeaderCyan, CircleShape)
     }
+    val iconSize = size * 0.4f
 
     Box(
-        modifier = Modifier.size(80.dp).scale(if (isListening) scale else 1f)
-            .shadow(elevation = if (isListening) 12.dp else 6.dp, shape = CircleShape, ambientColor = if (isListening) Color(0xFFF5576C) else HeaderCyan)
-            .then(backgroundModifier).clip(CircleShape),
+        modifier = Modifier
+            .size(size)
+            .scale(if (isListening) scale else 1f)
+            .shadow(
+                elevation = if (isListening) 12.dp else 6.dp,
+                shape = CircleShape,
+                ambientColor = if (isListening) Color(0xFFF5576C) else HeaderCyan
+            )
+            .then(backgroundModifier)
+            .clip(CircleShape),
         contentAlignment = Alignment.Center
     ) {
         IconButton(onClick = onClick, enabled = !isDisabled, modifier = Modifier.fillMaxSize()) {
             if (isListening) {
-                Icon(imageVector = Icons.Default.Close, contentDescription = "Detener", tint = Color.White, modifier = Modifier.size(32.dp))
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Detener",
+                    tint = Color.White,
+                    modifier = Modifier.size(iconSize)
+                )
             } else {
-                Text("🎤", fontSize = 28.sp)
+                Text("🎤", fontSize = (size.value * 0.35f).sp)
             }
         }
     }
