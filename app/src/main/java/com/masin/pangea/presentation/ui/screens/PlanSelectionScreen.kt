@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -116,9 +117,9 @@ fun PlanSelectionScreen(
                             },
                             onAccess = onNavigateToHome,
                             icons = listOf(
-                                ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
-                                ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
-                                ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio.")
+                                ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                                ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
+                                ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio.")
                             ),
                             dimens = dimens
                         )
@@ -135,14 +136,15 @@ fun PlanSelectionScreen(
                             },
                             onAccess = onNavigateToHome,
                             icons = listOf(
-                                ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
-                                ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
-                                ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio."),
-                                ServiceIconItem(R.drawable.paga, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
-                                ServiceIconItem(R.drawable.conoce, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
-                                ServiceIconItem(R.drawable.gestiona, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
-                                ServiceIconItem(R.drawable.soluciona, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
-                                ServiceIconItem(R.drawable.paga, "Pagos y Agendamiento", "Módulo para realizar pagos y agendar tus citas.")
+                                ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                                ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
+                                ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio."),
+                                ServiceIconItem(R.drawable.agente, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
+                                ServiceIconItem(R.drawable.live, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
+                                ServiceIconItem(R.drawable.gestor_pass, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
+                                ServiceIconItem(R.drawable.radar_territorial, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
+                                ServiceIconItem(R.drawable.pagos, "Ventanilla de pagos", "Módulo para realizar pagos en línea."),
+                                ServiceIconItem(R.drawable.calendario, "Agendamiento", "Módulo para agendar tus citas y eventos.")
                             ),
                             dimens = dimens
                         )
@@ -161,9 +163,9 @@ fun PlanSelectionScreen(
                     },
                     onAccess = onNavigateToHome,
                     icons = listOf(
-                        ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
-                        ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
-                        ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio.")
+                        ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                        ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
+                        ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio.")
                     ),
                     dimens = dimens
                 )
@@ -187,14 +189,15 @@ fun PlanSelectionScreen(
                     },
                     onAccess = onNavigateToHome,
                     icons = listOf(
-                        ServiceIconItem(R.drawable.conoce, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
-                        ServiceIconItem(R.drawable.gestiona, "E-learning", "Plataforma de formación y educación virtual."),
-                        ServiceIconItem(R.drawable.soluciona, "Desk", "Herramientas de soporte y administración de tu escritorio."),
-                        ServiceIconItem(R.drawable.paga, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
-                        ServiceIconItem(R.drawable.conoce, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
-                        ServiceIconItem(R.drawable.gestiona, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
-                        ServiceIconItem(R.drawable.soluciona, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
-                        ServiceIconItem(R.drawable.paga, "Pagos y Agendamiento", "Módulo para realizar pagos y agendar tus citas.")
+                        ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                        ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
+                        ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio."),
+                        ServiceIconItem(R.drawable.agente, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
+                        ServiceIconItem(R.drawable.live, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
+                        ServiceIconItem(R.drawable.gestor_pass, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
+                        ServiceIconItem(R.drawable.radar_territorial, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
+                        ServiceIconItem(R.drawable.pagos, "Ventanilla de pagos", "Módulo para realizar pagos en línea."),
+                        ServiceIconItem(R.drawable.calendario, "Agendamiento", "Módulo para agendar tus citas y eventos.")
                     ),
                     dimens = dimens
                 )
@@ -353,7 +356,7 @@ fun PlanCard(
                 Spacer(modifier = Modifier.height(dimens.spacingLarge))
 
                 // Grid de iconos
-                val numColumns = if (dimens.isTablet) 4 else 3
+                val numColumns = 3
                 val rows = (icons.size + numColumns - 1) / numColumns
 
                 for (i in 0 until rows) {
@@ -376,9 +379,8 @@ fun PlanCard(
                                     Image(
                                         painter = painterResource(id = item.iconRes),
                                         contentDescription = null,
-                                        modifier = Modifier.size(iconInnerSize),
-                                        contentScale = ContentScale.Fit,
-                                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
+                                        modifier = Modifier.fillMaxSize().clip(CircleShape),
+                                        contentScale = ContentScale.Crop
                                     )
                                     
                                     Box(
@@ -421,8 +423,7 @@ fun PlanCard(
                                                         painter = painterResource(id = item.iconRes),
                                                         contentDescription = null,
                                                         modifier = Modifier.size(64.dp),
-                                                        contentScale = ContentScale.Fit,
-                                                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(PangeaCyan)
+                                                        contentScale = ContentScale.Fit
                                                     )
                                                     
                                                     Spacer(modifier = Modifier.height(16.dp))
