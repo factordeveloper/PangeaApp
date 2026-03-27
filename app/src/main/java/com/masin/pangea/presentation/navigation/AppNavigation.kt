@@ -56,8 +56,12 @@ fun AppNavigation(
 
         // Pantalla de Selección de Plan
         composable(route = NavRoutes.PLAN_SELECTION) {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            val sharedPrefs = androidx.compose.runtime.remember { context.getSharedPreferences("pangea_prefs", android.content.Context.MODE_PRIVATE) }
             PlanSelectionScreen(
-                onNavigateToHome = {
+                onNavigateToHome = { selectedPlan ->
+                    val planName = selectedPlan?.name ?: "BASIC"
+                    sharedPrefs.edit().putString("selected_plan", planName).apply()
                     navController.navigate(NavRoutes.HOME) {
                         popUpTo(NavRoutes.PLAN_SELECTION) { inclusive = true }
                     }

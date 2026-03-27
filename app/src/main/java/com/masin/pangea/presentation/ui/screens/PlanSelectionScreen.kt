@@ -45,7 +45,7 @@ data class ServiceIconItem(
 
 @Composable
 fun PlanSelectionScreen(
-    onNavigateToHome: () -> Unit
+    onNavigateToHome: (PlanType?) -> Unit
 ) {
     val dimens = rememberAppDimens()
     var selectedPlan by remember { mutableStateOf<PlanType?>(null) }
@@ -115,7 +115,7 @@ fun PlanSelectionScreen(
                             onSelect = {
                                 selectedPlan = if (selectedPlan == PlanType.BASIC) null else PlanType.BASIC
                             },
-                            onAccess = onNavigateToHome,
+                            onAccess = { onNavigateToHome(selectedPlan) },
                             icons = listOf(
                                 ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
                                 ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
@@ -134,7 +134,7 @@ fun PlanSelectionScreen(
                             onSelect = {
                                 selectedPlan = if (selectedPlan == PlanType.PREMIUM) null else PlanType.PREMIUM
                             },
-                            onAccess = onNavigateToHome,
+                            onAccess = { onNavigateToHome(selectedPlan) },
                             icons = listOf(
                                 ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
                                 ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
@@ -161,7 +161,7 @@ fun PlanSelectionScreen(
                     onSelect = {
                         selectedPlan = if (selectedPlan == PlanType.BASIC) null else PlanType.BASIC
                     },
-                    onAccess = onNavigateToHome,
+                    onAccess = { onNavigateToHome(selectedPlan) },
                     icons = listOf(
                         ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
                         ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
@@ -187,7 +187,7 @@ fun PlanSelectionScreen(
                             }
                         }
                     },
-                    onAccess = onNavigateToHome,
+                    onAccess = { onNavigateToHome(selectedPlan) },
                     icons = listOf(
                         ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
                         ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
