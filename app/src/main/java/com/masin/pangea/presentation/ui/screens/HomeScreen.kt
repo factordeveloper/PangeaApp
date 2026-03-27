@@ -43,6 +43,8 @@ import com.masin.pangea.presentation.ui.utils.AppDimens
 import com.masin.pangea.presentation.ui.utils.WindowSizeClass
 import com.masin.pangea.presentation.ui.utils.rememberAppDimens
 import com.masin.pangea.ui.theme.PANGEAappTheme
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 // Colores del módulo Home
 private val TealDark = Color(0xFF0D5C5C)
@@ -91,8 +93,11 @@ fun HomeScreen(
                     .height(dimens.heroImageSize)
                     .clickable(onClick = onNavigateToPangea)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.fondo_texto),
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(R.drawable.fondo_texto)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -308,8 +313,12 @@ private fun DiscoverCircle(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(backgroundRes),
+            val context = androidx.compose.ui.platform.LocalContext.current
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(backgroundRes)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop

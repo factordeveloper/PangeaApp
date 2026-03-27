@@ -36,6 +36,8 @@ import com.masin.pangea.ui.theme.PANGEAappTheme
 import com.masin.pangea.ui.theme.PangeaCyan
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 data class ServiceIconItem(
     val iconRes: Int,
@@ -54,8 +56,12 @@ fun PlanSelectionScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Fondo idéntico al WelcomeScreen
-        Image(
-            painter = painterResource(id = R.drawable.fondo_texto),
+        val context = androidx.compose.ui.platform.LocalContext.current
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(R.drawable.fondo_texto)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -376,8 +382,12 @@ fun PlanCard(
                                         .background(Color.White, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Image(
-                                        painter = painterResource(id = item.iconRes),
+                                    val context = androidx.compose.ui.platform.LocalContext.current
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(context)
+                                            .data(item.iconRes)
+                                            .crossfade(true)
+                                            .build(),
                                         contentDescription = null,
                                         modifier = Modifier.fillMaxSize().clip(CircleShape),
                                         contentScale = ContentScale.Crop
