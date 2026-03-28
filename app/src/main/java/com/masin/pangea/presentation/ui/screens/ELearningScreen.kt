@@ -1,5 +1,6 @@
 package com.masin.pangea.presentation.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -133,7 +134,7 @@ private data class CourseItem(
 )
 
 private val courseItems = listOf(
-    CourseItem("Comunicación Asertiva", "5 minutos de contenido", isHighlighted = true),
+    CourseItem("Comunicación Asertiva", "5 minutos de contenido"),
     CourseItem("Curso de negociación", "3 minutos de contenido"),
     CourseItem("Manejo de estrés", null),
     CourseItem("Salud ocupacional", "1 minutos de contenido")
@@ -143,6 +144,7 @@ private val courseItems = listOf(
  * Pantalla del módulo E-Learning con carrusel de convenios y lista de cursos.
  * Adaptativa para móviles y tablets.
  */
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun ELearningScreen() {
     val dimens = rememberAppDimens()

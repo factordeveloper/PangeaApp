@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -47,6 +48,7 @@ private val TextWhite           = Color.White
 private val AccentGreen         = Color(0xFF4CAF88)
 private val AccentAmber         = Color(0xFFFFA726)
 private val AccentRed           = Color(0xFFEF5350)
+private val AccentBlue          = Color(0xFF2196F3)
 private val SurfaceLight        = Color(0xFFF0F4F4)
 private val TextDark            = Color(0xFF1A2E2E)
 
@@ -241,33 +243,43 @@ fun DeskScreen() {
                     }
                 }
 
-                // Estadísticas rápidas
+                // Estadísticas rápidas (Ahora funcionan como filtros)
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    StatChip("Total",       tickets.size.toString(),                              Color(0xFF1A3A3A), Modifier.weight(1f))
-                    StatChip("Abiertos",    tickets.count { it.status == TicketStatus.OPEN }.toString(),        AccentGreen, Modifier.weight(1f))
-                    StatChip("En curso",    tickets.count { it.status == TicketStatus.IN_PROGRESS }.toString(), AccentAmber, Modifier.weight(1f))
-                    StatChip("Cerrados",    tickets.count { it.status == TicketStatus.CLOSED }.toString(),      AccentRed,   Modifier.weight(1f))
-                }
-
-                // Filtros de estado
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    FilterChip(selected = filterStatus == null, onClick = { filterStatus = null },  label = { Text("Todos") })
-                    TicketStatus.entries.forEach { status ->
-                        FilterChip(
-                            selected = filterStatus == status,
-                            onClick  = { filterStatus = if (filterStatus == status) null else status },
-                            label    = { Text(status.label, fontSize = 11.sp) },
-                            leadingIcon = if (filterStatus == status) {
-                                { Icon(Icons.Default.Check, null, Modifier.size(14.dp)) }
-                            } else null
-                        )
-                    }
+                    StatChip(
+                        label = "Total",
+                        value = tickets.size.toString(),
+                        color = AccentBlue,
+                        isSelected = filterStatus == null,
+                        onClick = { filterStatus = null },
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatChip(
+                        label = "Abiertos",
+                        value = tickets.count { it.status == TicketStatus.OPEN }.toString(),
+                        color = AccentGreen,
+                        isSelected = filterStatus == TicketStatus.OPEN,
+                        onClick = { filterStatus = if (filterStatus == TicketStatus.OPEN) null else TicketStatus.OPEN },
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatChip(
+                        label = "En curso",
+                        value = tickets.count { it.status == TicketStatus.IN_PROGRESS }.toString(),
+                        color = AccentAmber,
+                        isSelected = filterStatus == TicketStatus.IN_PROGRESS,
+                        onClick = { filterStatus = if (filterStatus == TicketStatus.IN_PROGRESS) null else TicketStatus.IN_PROGRESS },
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatChip(
+                        label = "Cerrados",
+                        value = tickets.count { it.status == TicketStatus.CLOSED }.toString(),
+                        color = AccentRed,
+                        isSelected = filterStatus == TicketStatus.CLOSED,
+                        onClick = { filterStatus = if (filterStatus == TicketStatus.CLOSED) null else TicketStatus.CLOSED },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
 
                 Spacer(Modifier.height(8.dp))
@@ -604,19 +616,37 @@ private fun DeskAuthModal(
 
 // ── Chip de estadística ────────────────────────────────────────────────────────
 @Composable
-private fun StatChip(label: String, value: String, color: Color, modifier: Modifier = Modifier) {
-    Card(
-        modifier  = modifier,
-        shape     = RoundedCornerShape(12.dp),
-        colors    = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.1f)),
-        elevation = CardDefaults.cardElevation(0.dp)
+private fun StatChip(
+    label: String,
+    value: String,
+    color: Color,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.height(60.dp),
+        shape = RoundedCornerShape(12.dp),
+        color = color.copy(alpha = 0.12f),
+        border = if (isSelected) BorderStroke(2.dp, TextDark) else null
     ) {
         Column(
-            modifier            = Modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 6.dp),
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(value, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = color)
-            Text(label, fontSize = 10.sp, color = color.copy(alpha = 0.8f))
+            Text(
+                text = value,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = color
+            )
+            Text(
+                text = label,
+                fontSize = 11.sp,
+                color = color.copy(alpha = 0.8f)
+            )
         }
     }
 }
