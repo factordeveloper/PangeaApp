@@ -139,6 +139,7 @@ fun MainScreen() {
     val context = LocalContext.current
     val sharedPrefs = remember { context.getSharedPreferences("pangea_prefs", android.content.Context.MODE_PRIVATE) }
     val isFirstRun = remember { sharedPrefs.getBoolean("is_first_run", true) }
+    val isPremium = sharedPrefs.getString("selected_plan", "BASIC") == "PREMIUM"
     val startDestination = if (isFirstRun) NavRoutes.WALKTHROUGH else NavRoutes.WELCOME
 
     val navController = rememberNavController()
@@ -157,8 +158,9 @@ fun MainScreen() {
     val isPlanSelectionScreen = currentRoute == NavRoutes.PLAN_SELECTION
     val isRadarTerritorialScreen = currentRoute == NavRoutes.RADAR_TERRITORIAL
     val hasChatInput = isLiaScreen
-    val shouldShowBottomBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen && !isWalkthroughScreen && !isRadarTerritorialScreen
+    val shouldShowBottomBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen && !isWalkthroughScreen
     val shouldShowTopBar = (!isImeVisible || !hasChatInput) && !isWelcomeScreen && !isPlanSelectionScreen && !isWalkthroughScreen && !isRadarTerritorialScreen
+
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -242,40 +244,43 @@ fun MainScreen() {
                         unselectedTextColor = Color.DarkGray
                     )
                 )
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.radar_territorial),
-                            contentDescription = "Radar Territorial",
-                            modifier = Modifier.size(24.dp),
-                            tint = Color(0xFF40EBFF)
-                        )
-                    },
-                    label = { Text("Radar Territorial") },
-                    selected = currentRoute == NavRoutes.RADAR_TERRITORIAL,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        if (currentRoute != NavRoutes.RADAR_TERRITORIAL) {
-                            navController.navigate(NavRoutes.RADAR_TERRITORIAL) {
-                                popUpTo(NavRoutes.HOME) {
-                                    saveState = true
-                                    inclusive = false
+                
+                if (isPremium) {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    NavigationDrawerItem(
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.radar_territorial),
+                                contentDescription = "Radar Territorial",
+                                modifier = Modifier.size(24.dp),
+                                tint = Color(0xFF40EBFF)
+                            )
+                        },
+                        label = { Text("Radar Territorial") },
+                        selected = currentRoute == NavRoutes.RADAR_TERRITORIAL,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            if (currentRoute != NavRoutes.RADAR_TERRITORIAL) {
+                                navController.navigate(NavRoutes.RADAR_TERRITORIAL) {
+                                    popUpTo(NavRoutes.HOME) {
+                                        saveState = true
+                                        inclusive = false
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                    colors = NavigationDrawerItemDefaults.colors(
-                        selectedContainerColor = PangeaCyan.copy(alpha = 0.2f),
-                        selectedIconColor = Color(0xFF40EBFF),
-                        selectedTextColor = PangeaBlue,
-                        unselectedIconColor = Color.Gray,
-                        unselectedTextColor = Color.DarkGray
+                        },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                        colors = NavigationDrawerItemDefaults.colors(
+                            selectedContainerColor = PangeaCyan.copy(alpha = 0.2f),
+                            selectedIconColor = Color(0xFF40EBFF),
+                            selectedTextColor = PangeaBlue,
+                            unselectedIconColor = Color.Gray,
+                            unselectedTextColor = Color.DarkGray
+                        )
                     )
-                )
+                }
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Spacer(modifier = Modifier.weight(1f))
                 NavigationDrawerItem(

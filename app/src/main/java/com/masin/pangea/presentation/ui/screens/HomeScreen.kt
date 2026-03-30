@@ -64,13 +64,14 @@ fun HomeScreen(
     onNavigateToPangea: () -> Unit,
     onNavigateToELearning: () -> Unit,
     onNavigateToDesk: () -> Unit,
-    onNavigateToDigiturno: () -> Unit
+    onNavigateToDigiturno: () -> Unit,
+    onNavigateToRadar: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val dimens = rememberAppDimens()
     val context = androidx.compose.ui.platform.LocalContext.current
     val sharedPrefs = androidx.compose.runtime.remember { context.getSharedPreferences("pangea_prefs", android.content.Context.MODE_PRIVATE) }
-    val selectedPlanStr = androidx.compose.runtime.remember { sharedPrefs.getString("selected_plan", "BASIC") }
+    val selectedPlanStr = sharedPrefs.getString("selected_plan", "BASIC")
     val isPremium = selectedPlanStr == "PREMIUM"
 
     BoxWithConstraints(
@@ -250,7 +251,7 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        DiscoverCircle(label = "Radar territ.", dimens = dimens, backgroundRes = R.drawable.radar_territorial, onClick = {})
+                        DiscoverCircle(label = "Radar territ.", dimens = dimens, backgroundRes = R.drawable.radar_territorial, onClick = onNavigateToRadar)
                         DiscoverCircle(label = "Pago en línea", dimens = dimens, backgroundRes = R.drawable.pagos, onClick = {})
                         DiscoverCircle(label = "Agendamiento", dimens = dimens, backgroundRes = R.drawable.calendario, onClick = {})
                     }
@@ -348,7 +349,8 @@ fun HomeScreenPreview() {
             onNavigateToPangea = {},
             onNavigateToELearning = {},
             onNavigateToDesk = {},
-            onNavigateToDigiturno = {}
+            onNavigateToDigiturno = {},
+            onNavigateToRadar = {}
         )
     }
 }

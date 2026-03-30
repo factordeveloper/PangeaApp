@@ -85,6 +85,9 @@ fun AppNavigation(
                 },
                 onNavigateToDigiturno = {
                     navController.navigate(BottomNavItem.Digiturno.route)
+                },
+                onNavigateToRadar = {
+                    navController.navigate(NavRoutes.RADAR_TERRITORIAL)
                 }
             )
         }
