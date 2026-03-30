@@ -44,6 +44,7 @@ import android.widget.Toast
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Brush
@@ -206,8 +207,42 @@ fun MainScreen() {
                         )
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                NavigationDrawerItem(
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Actualizar Plan",
+                            modifier = Modifier.size(24.dp),
+                            tint = PangeaTeal
+                        )
+                    },
+                    label = { Text("Actualizar Plan") },
+                    selected = currentRoute == NavRoutes.PLAN_SELECTION,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        if (currentRoute != NavRoutes.PLAN_SELECTION) {
+                            navController.navigate(NavRoutes.PLAN_SELECTION) {
+                                popUpTo(NavRoutes.HOME) {
+                                    saveState = true
+                                    inclusive = false
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                    colors = NavigationDrawerItemDefaults.colors(
+                        selectedContainerColor = PangeaCyan.copy(alpha = 0.2f),
+                        selectedIconColor = PangeaTeal,
+                        selectedTextColor = PangeaBlue,
+                        unselectedIconColor = Color.Gray,
+                        unselectedTextColor = Color.DarkGray
+                    )
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Spacer(modifier = Modifier.weight(1f))
                 NavigationDrawerItem(
                     icon = { Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null) },
                     label = { Text("Logout") },

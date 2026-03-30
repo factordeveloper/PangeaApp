@@ -142,9 +142,6 @@ fun PlanSelectionScreen(
                             },
                             onAccess = { onNavigateToHome(selectedPlan) },
                             icons = listOf(
-                                ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
-                                ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
-                                ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio."),
                                 ServiceIconItem(R.drawable.agente, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
                                 ServiceIconItem(R.drawable.live, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
                                 ServiceIconItem(R.drawable.gestor_pass, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
