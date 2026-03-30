@@ -105,5 +105,10 @@ fun AppNavigation(
         composable(route = NavRoutes.LIA) {
             LiaVoiceCallScreen(onBackPressed = { navController.popBackStack() })
         }
+
+        // mRadar Territorial (LIA Explorer)
+        composable(route = NavRoutes.RADAR_TERRITORIAL) {
+            WebViewScreen(url = "file:///android_asset/lia-explorer/index.html")
+        }
     }
 }

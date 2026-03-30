@@ -12,6 +12,7 @@ object NavRoutes {
     const val PLAN_SELECTION = "plan_selection"
     const val HOME = "home"
     const val LIA = "lia"
+    const val RADAR_TERRITORIAL = "radar_territorial"
 }
 
 /**

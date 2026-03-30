@@ -81,8 +81,12 @@ fun WebViewScreen(url: String) {
                         setSupportZoom(true)
                         allowFileAccess = true
                         allowContentAccess = true
+                        @Suppress("SetJavaScriptEnabled")
+                        allowFileAccessFromFileURLs = true
+                        @Suppress("SetJavaScriptEnabled")
+                        allowUniversalAccessFromFileURLs = true
                         cacheMode = android.webkit.WebSettings.LOAD_DEFAULT
-                        setGeolocationEnabled(false)
+                        setGeolocationEnabled(true)
                     }
 
                     webViewClient = object : WebViewClient() {
