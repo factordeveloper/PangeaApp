@@ -839,6 +839,286 @@
             }
         }
 
+        /* ===== MOBILE LANDSCAPE (phones in horizontal) ===== */
+        @media (max-height: 500px) and (orientation: landscape) {
+
+            /* --- Header badge: compact, top-right --- */
+            .header-badge {
+                top: 6px;
+                right: 10px;
+                left: auto;
+                transform: none;
+                padding: 4px 12px;
+                gap: 6px;
+                border-radius: 30px;
+            }
+
+            .header-badge img {
+                width: 18px;
+                height: 18px;
+            }
+
+            .header-badge .title {
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+            .header-badge .subtitle {
+                display: none;
+            }
+
+            /* --- Coords HUD: compact, top-left, below toolbar --- */
+            .coords-hud {
+                top: 35px;
+                left: 8px;
+                padding: 6px 10px;
+                min-width: auto;
+                border-radius: 6px;
+                z-index: 9005;
+            }
+
+            .coords-hud .label {
+                font-size: 8px;
+                margin-bottom: 2px;
+                letter-spacing: 1px;
+            }
+
+            .coords-hud .value {
+                font-size: 10px;
+                line-height: 1.3;
+            }
+
+            /* --- Zoom controls: small, top-right corner, below header --- */
+            .zoom-controls {
+                top: 36px;
+                right: 10px;
+                left: auto;
+                transform: none;
+                flex-direction: row !important;
+                gap: 4px;
+            }
+
+            .zoom-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+                border-radius: 6px;
+            }
+
+            /* --- Left column: bottom-left, horizontal compact --- */
+            .left-column {
+                position: fixed;
+                left: 8px;
+                bottom: 6px;
+                top: auto;
+                z-index: 9000;
+                display: flex;
+                flex-direction: row;
+                gap: 6px;
+                pointer-events: none;
+                width: auto;
+                max-width: 55%;
+                align-items: flex-end;
+            }
+
+            .left-column > * {
+                pointer-events: auto;
+                position: static !important;
+                margin: 0 !important;
+            }
+
+            /* --- Landmarks panel: horizontal scrolling, compact --- */
+            .landmarks-panel {
+                padding: 6px 8px;
+                min-width: auto;
+                max-height: 90px;
+                max-width: 180px;
+                overflow-y: auto;
+                border-radius: 6px;
+                gap: 4px;
+            }
+
+            .landmarks-panel .label {
+                font-size: 8px;
+                letter-spacing: 1px;
+                margin-bottom: 2px;
+                padding-bottom: 3px;
+            }
+
+            .landmark-item {
+                padding: 2px 4px;
+                gap: 6px;
+                border-radius: 4px;
+            }
+
+            .landmark-item .emoji {
+                font-size: 11px;
+            }
+
+            .landmark-item .emoji img {
+                width: 14px !important;
+                height: 14px !important;
+            }
+
+            .landmark-item .name {
+                font-size: 10px;
+            }
+
+            .navigator-status {
+                font-size: 7px;
+                height: 10px;
+                margin-top: 2px;
+            }
+
+            /* --- Trail toggle: compact --- */
+            .trail-toggle {
+                position: static !important;
+            }
+
+            .trail-btn {
+                padding: 5px 10px;
+                font-size: 8px;
+                gap: 5px;
+                border-radius: 6px;
+            }
+
+            .trail-dot {
+                width: 6px;
+                height: 6px;
+            }
+
+            /* --- Speed control: visible, compact, bottom-center-left --- */
+            .speed-control {
+                display: flex !important;
+                position: fixed;
+                top: auto;
+                bottom: 6px;
+                right: auto;
+                left: 40%;
+                transform: translateX(-50%);
+                flex-direction: row;
+                align-items: center;
+                gap: 6px;
+                padding: 5px 10px;
+                border-radius: 20px;
+                z-index: 9000;
+            }
+
+            .speed-control .label {
+                font-size: 7px;
+                letter-spacing: 1px;
+                white-space: nowrap;
+            }
+
+            .cyber-slider {
+                width: 70px;
+                height: 3px;
+                margin: 0;
+            }
+
+            .cyber-slider::-webkit-slider-thumb {
+                width: 10px;
+                height: 10px;
+            }
+
+            .speed-value-display {
+                font-size: 9px;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            /* --- D-Pad: smaller, bottom-right --- */
+            .dpad-container {
+                bottom: 6px;
+                right: 8px;
+            }
+
+            .dpad {
+                grid-template-columns: 38px 38px 38px;
+                grid-template-rows: 38px 38px 38px;
+                gap: 2px;
+            }
+
+            .dpad-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 16px;
+                border-radius: 6px;
+            }
+
+            .dpad-btn.center {
+                font-size: 12px;
+            }
+
+            /* --- Nav back: top-left small --- */
+            .nav-back {
+                bottom: auto;
+                top: 6px;
+                left: 8px;
+                transform: none;
+                padding: 5px 10px;
+                font-size: 8px;
+                border-radius: 20px;
+                animation: fadeSlideRight 0.5s ease-out 0.7s both;
+            }
+
+            /* --- Keyboard hint: hide on mobile landscape --- */
+            .keyboard-hint {
+                display: none;
+            }
+
+            /* --- Lia avatar: slightly smaller on landscape mobile --- */
+            .lia-avatar-wrapper {
+                width: 80px;
+                height: 80px;
+            }
+
+            .lia-avatar-wrapper::before {
+                width: 80px;
+                height: 80px;
+            }
+
+            .lia-avatar-wrapper img {
+                width: 65px;
+                height: 65px;
+            }
+        }
+
+        /* ===== EXTRA SMALL LANDSCAPE (very short phones like Galaxy Fold) ===== */
+        @media (max-height: 360px) and (orientation: landscape) {
+            .coords-hud {
+                padding: 4px 8px;
+            }
+
+            .coords-hud .value {
+                font-size: 9px;
+            }
+
+            .landmarks-panel {
+                max-height: 70px;
+                max-width: 150px;
+            }
+
+            .dpad {
+                grid-template-columns: 34px 34px 34px;
+                grid-template-rows: 34px 34px 34px;
+            }
+
+            .dpad-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+
+            .speed-control {
+                padding: 4px 8px;
+            }
+
+            .cyber-slider {
+                width: 55px;
+            }
+        }
+
         /* ===== HIDE DEFAULT LEAFLET CONTROLS ===== */
         .leaflet-control-zoom {
             display: none !important;
