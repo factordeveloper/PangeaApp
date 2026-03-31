@@ -345,7 +345,7 @@ fun DrawerHeader(onCloseClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(dimens.avatarSize * 2.8f)
+            .height(dimens.avatarSize * 3.2f)
             .background(
                 Brush.linearGradient(
                     0f to PangeaBlue,
@@ -387,11 +387,13 @@ fun DrawerHeader(onCloseClick: () -> Unit) {
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = dimens.fontCaption
                 )
+                Spacer(modifier = Modifier.height(12.dp))
             }
+
             Image(
                 painter = painterResource(id = R.drawable.lia_profile),
                 contentDescription = "Libélula LIA",
-                modifier = Modifier.size(dimens.avatarSize * 1.3f),
+                modifier = Modifier.size(dimens.avatarSize * 1.7f),
                 contentScale = ContentScale.Fit
             )
         }
