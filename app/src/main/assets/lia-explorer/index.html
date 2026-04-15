@@ -282,76 +282,75 @@
             }
         }
 
-        /* ===== D-PAD CONTROLS ===== */
-        .dpad-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 9000;
-            animation: fadeScaleIn 0.5s ease-out 0.4s both;
-        }
-
-        .dpad {
-            display: grid;
-            grid-template-columns: 60px 60px 60px;
-            grid-template-rows: 60px 60px 60px;
-            gap: 4px;
-        }
-
-        .dpad-btn {
-            width: 60px;
-            height: 60px;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 8px;
-            background: var(--cyber-card);
-            color: var(--cyber-cyan);
-            font-size: 22px;
+        /* ===== CENTER/RADAR BUTTON & JOYSTICK ===== */
+        .recenter-btn {
+            border: 1px solid var(--cyber-green);
+            color: var(--cyber-green);
+            font-size: 16px;
+            font-family: 'Orbitron', sans-serif;
+            background: transparent;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.15s ease;
             backdrop-filter: blur(12px);
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
+            margin-right: 4px;
         }
 
-        .dpad-btn:hover {
-            background: rgba(0, 255, 255, 0.08);
-            border-color: var(--cyber-cyan);
-            box-shadow: var(--glow-cyan);
-        }
-
-        .dpad-btn:active,
-        .dpad-btn.pressed {
-            background: rgba(0, 255, 255, 0.2);
-            border-color: var(--cyber-cyan);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-            transform: scale(0.92);
-        }
-
-        .dpad-btn.center {
-            border-color: var(--cyber-green);
-            color: var(--cyber-green);
-            font-size: 16px;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-        }
-
-        .dpad-btn.center:hover {
-            border-color: var(--cyber-green);
+        .recenter-btn:hover {
+            background: rgba(57, 229, 167, 0.1);
             box-shadow: var(--glow-green);
         }
 
-        .dpad-btn.center:active,
-        .dpad-btn.center.pressed {
+        .recenter-btn:active {
             background: rgba(57, 229, 167, 0.2);
-            box-shadow: 0 0 30px rgba(57, 229, 167, 0.6);
+            box-shadow: 0 0 15px rgba(57, 229, 167, 0.6);
+            transform: scale(0.92);
         }
 
-        .dpad-btn.empty {
-            visibility: hidden;
+        .joystick-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9000;
+            width: 120px;
+            height: 120px;
+            animation: fadeScaleIn 0.5s ease-out 0.4s both;
+            touch-action: none;
+        }
+
+        .joystick-base {
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            background: rgba(13, 15, 26, 0.7);
+            position: relative;
+            box-shadow: var(--glow-cyan);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .joystick-stick {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--cyber-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            position: absolute;
+            cursor: pointer;
+            transition: background 0.1s, box-shadow 0.1s;
+        }
+        
+        .joystick-base.active .joystick-stick {
+            background: #fff;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
         }
 
         /* ===== ZOOM CONTROLS ===== */
@@ -793,36 +792,28 @@
                 justify-content: center;
             }
 
-            .dpad-container {
+            .joystick-container {
                 bottom: 20px;
                 right: 10px;
-                left: auto;
-                transform: none;
+                width: 100px;
+                height: 100px;
             }
 
-            .dpad {
-                grid-template-columns: 50px 50px 50px;
-                grid-template-rows: 50px 50px 50px;
-                gap: 2px;
-            }
-
-            .dpad-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+            .joystick-stick {
+                width: 40px;
+                height: 40px;
             }
         }
 
         @media (max-width: 400px) {
-            .dpad {
-                grid-template-columns: 44px 44px 44px;
-                grid-template-rows: 44px 44px 44px;
+            .joystick-container {
+                width: 90px;
+                height: 90px;
             }
 
-            .dpad-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 18px;
+            .joystick-stick {
+                width: 36px;
+                height: 36px;
             }
 
             .left-column {
@@ -1051,27 +1042,17 @@
                 white-space: nowrap;
             }
 
-            /* --- D-Pad: smaller, bottom-right --- */
-            .dpad-container {
-                bottom: 6px;
-                right: 8px;
+            /* --- Joystick: smaller, bottom-right --- */
+            .joystick-container {
+                bottom: 10px;
+                right: 10px;
+                width: 90px;
+                height: 90px;
             }
 
-            .dpad {
-                grid-template-columns: 38px 38px 38px;
-                grid-template-rows: 38px 38px 38px;
-                gap: 2px;
-            }
-
-            .dpad-btn {
-                width: 38px;
-                height: 38px;
-                font-size: 16px;
-                border-radius: 6px;
-            }
-
-            .dpad-btn.center {
-                font-size: 12px;
+            .joystick-stick {
+                width: 36px;
+                height: 36px;
             }
 
             /* --- Nav back: top-left small --- */
@@ -1123,15 +1104,14 @@
                 max-width: 150px;
             }
 
-            .dpad {
-                grid-template-columns: 34px 34px 34px;
-                grid-template-rows: 34px 34px 34px;
+            .joystick-container {
+                width: 80px;
+                height: 80px;
             }
 
-            .dpad-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
+            .joystick-stick {
+                width: 32px;
+                height: 32px;
             }
 
             .speed-control {
@@ -1172,6 +1152,7 @@
 
     <!-- Header -->
     <div class="header-badge">
+        <button class="recenter-btn" id="btnCenter" aria-label="Centrar">🎯</button>
         <img src="lia_avatar.png" alt="Lia">
         <div>
             <div class="title">RADAR</div>
@@ -1224,20 +1205,10 @@
         <div class="speed-value-display" id="speedDisplay">Normal (0.0008)</div>
     </div>
 
-    <!-- D-Pad -->
-    <div class="dpad-container">
-        <div class="dpad">
-            <div class="dpad-btn empty"></div>
-            <button class="dpad-btn" id="btnUp" aria-label="Mover arriba">▲</button>
-            <div class="dpad-btn empty"></div>
-
-            <button class="dpad-btn" id="btnLeft" aria-label="Mover izquierda">◀</button>
-            <button class="dpad-btn center" id="btnCenter" aria-label="Centrar">🎯</button>
-            <button class="dpad-btn" id="btnRight" aria-label="Mover derecha">▶</button>
-
-            <div class="dpad-btn empty"></div>
-            <button class="dpad-btn" id="btnDown" aria-label="Mover abajo">▼</button>
-            <div class="dpad-btn empty"></div>
+    <!-- Joystick -->
+    <div class="joystick-container" id="joystickZone">
+        <div class="joystick-base" id="joystickBase">
+            <div class="joystick-stick" id="joystickStick"></div>
         </div>
     </div>
 
@@ -1314,16 +1285,26 @@
 
         function updatePosition() {
             // Cancel auto-drive if manual input detected
-            if (activeKeys.size > 0 && isAutoDriving) {
+            if ((activeKeys.size > 0 || joyActive) && isAutoDriving) {
                 cancelAutoDrive('Control manual detectado');
             }
 
             let moved = false;
 
+            // Keyboard logic
             if (activeKeys.has('up')) { liaLat += moveSpeed; moved = true; }
             if (activeKeys.has('down')) { liaLat -= moveSpeed; moved = true; }
             if (activeKeys.has('left')) { liaLng -= moveSpeed; moved = true; }
             if (activeKeys.has('right')) { liaLng += moveSpeed; moved = true; }
+
+            // Joystick logic
+            if (joyActive) {
+                liaLat += joyDeltaY * moveSpeed; 
+                liaLng += joyDeltaX * moveSpeed;
+                if (Math.abs(joyDeltaX) > 0.05 || Math.abs(joyDeltaY) > 0.05) {
+                    moved = true;
+                }
+            }
 
             if (moved) {
                 renderLiaPosition();
@@ -1331,9 +1312,9 @@
                 stopLiaMovement();
             }
 
-            if (activeKeys.size > 0 && !isAutoDriving) {
+            if ((activeKeys.size > 0 || joyActive) && !isAutoDriving) {
                 animFrameId = requestAnimationFrame(updatePosition);
-            } else {
+            } else if (!isAutoDriving) {
                 animFrameId = null;
             }
         }
@@ -1488,46 +1469,85 @@
         });
 
         // =============================================
-        // D-PAD TOUCH/MOUSE INPUT
+        // JOYSTICK INPUT
         // =============================================
-        function setupDpadButton(id, direction) {
-            const btn = document.getElementById(id);
+        const stick = document.getElementById('joystickStick');
+        const base = document.getElementById('joystickBase');
+        
+        let joyActive = false;
+        let joyCenterX = 0;
+        let joyCenterY = 0;
+        let joyMaxRadius = 0;
+        
+        let joyDeltaX = 0; 
+        let joyDeltaY = 0;
 
-            // Mouse
-            btn.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                startDirection(direction);
-                btn.classList.add('pressed');
-            });
-
-            // Touch
-            btn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                startDirection(direction);
-                btn.classList.add('pressed');
-            }, { passive: false });
+        function initJoystick(e) {
+            joyActive = true;
+            base.classList.add('active');
+            
+            const rect = base.getBoundingClientRect();
+            joyCenterX = rect.left + rect.width / 2;
+            joyCenterY = rect.top + rect.height / 2;
+            joyMaxRadius = rect.width / 2 - stick.offsetWidth / 2;
+            
+            moveJoystick(e);
+            
+            if (!animFrameId && !isAutoDriving) {
+                animFrameId = requestAnimationFrame(updatePosition);
+            }
         }
 
-        // Global mouse/touch up
-        document.addEventListener('mouseup', () => {
-            ['up', 'down', 'left', 'right'].forEach(d => stopDirection(d));
-            document.querySelectorAll('.dpad-btn.pressed').forEach(b => b.classList.remove('pressed'));
-        });
+        function moveJoystick(e) {
+            if (!joyActive) return;
+            e.preventDefault();
 
-        document.addEventListener('touchend', () => {
-            ['up', 'down', 'left', 'right'].forEach(d => stopDirection(d));
-            document.querySelectorAll('.dpad-btn.pressed').forEach(b => b.classList.remove('pressed'));
-        });
+            let clientX, clientY;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
 
-        document.addEventListener('touchcancel', () => {
-            ['up', 'down', 'left', 'right'].forEach(d => stopDirection(d));
-            document.querySelectorAll('.dpad-btn.pressed').forEach(b => b.classList.remove('pressed'));
-        });
+            let dx = clientX - joyCenterX;
+            let dy = clientY - joyCenterY;
+            let dist = Math.sqrt(dx * dx + dy * dy);
 
-        setupDpadButton('btnUp', 'up');
-        setupDpadButton('btnDown', 'down');
-        setupDpadButton('btnLeft', 'left');
-        setupDpadButton('btnRight', 'right');
+            if (dist > joyMaxRadius) {
+                dx = dx * joyMaxRadius / dist;
+                dy = dy * joyMaxRadius / dist;
+            }
+
+            stick.style.transform = `translate(${dx}px, ${dy}px)`;
+
+            joyDeltaX = dx / joyMaxRadius;
+            joyDeltaY = -dy / joyMaxRadius; 
+        }
+
+        function endJoystick(e) {
+            if (!joyActive) return;
+            joyActive = false;
+            base.classList.remove('active');
+            stick.style.transform = `translate(0px, 0px)`;
+            joyDeltaX = 0;
+            joyDeltaY = 0;
+            if (activeKeys.size === 0 && animFrameId) {
+                cancelAnimationFrame(animFrameId);
+                animFrameId = null;
+                if (!isAutoDriving) stopLiaMovement();
+            }
+        }
+
+        base.addEventListener('mousedown', initJoystick);
+        document.addEventListener('mousemove', moveJoystick);
+        document.addEventListener('mouseup', endJoystick);
+
+        base.addEventListener('touchstart', initJoystick, {passive: false});
+        document.addEventListener('touchmove', moveJoystick, {passive: false});
+        document.addEventListener('touchend', endJoystick);
+        document.addEventListener('touchcancel', endJoystick);
 
         // Center button
         document.getElementById('btnCenter').addEventListener('click', () => {

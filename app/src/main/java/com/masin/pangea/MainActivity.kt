@@ -210,40 +210,42 @@ fun MainScreen() {
                         )
                     )
                 }
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Actualizar Plan",
-                            modifier = Modifier.size(24.dp),
-                            tint = PangeaTeal
-                        )
-                    },
-                    label = { Text("Actualizar Plan") },
-                    selected = currentRoute == NavRoutes.PLAN_SELECTION,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        if (currentRoute != NavRoutes.PLAN_SELECTION) {
-                            navController.navigate(NavRoutes.PLAN_SELECTION) {
-                                popUpTo(NavRoutes.HOME) {
-                                    saveState = true
-                                    inclusive = false
+                if (!isPremium) {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    NavigationDrawerItem(
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = "Actualizar Plan",
+                                modifier = Modifier.size(24.dp),
+                                tint = PangeaTeal
+                            )
+                        },
+                        label = { Text("Actualizar Plan") },
+                        selected = currentRoute == NavRoutes.PLAN_SELECTION,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            if (currentRoute != NavRoutes.PLAN_SELECTION) {
+                                navController.navigate(NavRoutes.PLAN_SELECTION) {
+                                    popUpTo(NavRoutes.HOME) {
+                                        saveState = true
+                                        inclusive = false
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                    colors = NavigationDrawerItemDefaults.colors(
-                        selectedContainerColor = PangeaCyan.copy(alpha = 0.2f),
-                        selectedIconColor = PangeaTeal,
-                        selectedTextColor = PangeaBlue,
-                        unselectedIconColor = Color.Gray,
-                        unselectedTextColor = Color.DarkGray
+                        },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                        colors = NavigationDrawerItemDefaults.colors(
+                            selectedContainerColor = PangeaCyan.copy(alpha = 0.2f),
+                            selectedIconColor = PangeaTeal,
+                            selectedTextColor = PangeaBlue,
+                            unselectedIconColor = Color.Gray,
+                            unselectedTextColor = Color.DarkGray
+                        )
                     )
-                )
+                }
                 
                 if (isPremium) {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))

@@ -115,7 +115,7 @@ fun PlanSelectionScreen(
                         PlanCard(
                             title = "Plan Básico",
                             description = "DigiTurno, E-learning y Desk",
-                            discountText = "Ahorra 5%",
+                            discountText = "",
                             dotCount = 3,
                             isSelected = selectedPlan == PlanType.BASIC,
                             onSelect = {
@@ -127,6 +127,7 @@ fun PlanSelectionScreen(
                                 ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
                                 ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio.")
                             ),
+                            showInfoButtons = false,
                             dimens = dimens
                         )
                     }
@@ -158,7 +159,7 @@ fun PlanSelectionScreen(
                 PlanCard(
                     title = "Plan Básico",
                     description = "DigiTurno, E-learning y Desk",
-                    discountText = "Ahorra 5%",
+                    discountText = "",
                     dotCount = 3,
                     isSelected = selectedPlan == PlanType.BASIC,
                     onSelect = {
@@ -170,6 +171,7 @@ fun PlanSelectionScreen(
                         ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
                         ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio.")
                     ),
+                    showInfoButtons = false,
                     dimens = dimens
                 )
 
@@ -222,6 +224,7 @@ fun PlanCard(
     onSelect: () -> Unit,
     onAccess: () -> Unit,
     icons: List<ServiceIconItem>,
+    showInfoButtons: Boolean = true,
     dimens: com.masin.pangea.presentation.ui.utils.AppDimens
 ) {
     val iconSize = (dimens.circleItemSize.value * 0.78f).dp        // ~70dp en compact
@@ -229,24 +232,26 @@ fun PlanCard(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         // Tag de ahorro superpuesto
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(y = 12.dp)
-                .zIndex(1f),
-            contentAlignment = Alignment.Center
-        ) {
+        if (discountText.isNotEmpty()) {
             Box(
                 modifier = Modifier
-                    .background(PangeaCyan, RoundedCornerShape(16.dp))
-                    .padding(horizontal = dimens.spacingMedium, vertical = 4.dp)
+                    .fillMaxWidth()
+                    .offset(y = 12.dp)
+                    .zIndex(1f),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = discountText,
-                    color = Color(0xFF0D2B2B),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = dimens.fontSmall
-                )
+                Box(
+                    modifier = Modifier
+                        .background(PangeaCyan, RoundedCornerShape(16.dp))
+                        .padding(horizontal = dimens.spacingMedium, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = discountText,
+                        color = Color(0xFF0D2B2B),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = dimens.fontSmall
+                    )
+                }
             }
         }
 
@@ -387,19 +392,21 @@ fun PlanCard(
                                         contentScale = ContentScale.Crop
                                     )
                                     
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.TopEnd
-                                    ) {
+                                    if (showInfoButtons) {
                                         Box(
-                                            modifier = Modifier
-                                                .padding(2.dp)
-                                                .size(24.dp)
-                                                .background(PangeaCyan, CircleShape)
-                                                .clickable { showInfo = true },
-                                            contentAlignment = Alignment.Center
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentAlignment = Alignment.TopEnd
                                         ) {
-                                            Text(text = "+", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                            Box(
+                                                modifier = Modifier
+                                                    .padding(2.dp)
+                                                    .size(24.dp)
+                                                    .background(PangeaCyan, CircleShape)
+                                                    .clickable { showInfo = true },
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(text = "+", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                            }
                                         }
                                     }
                                     
@@ -491,7 +498,7 @@ fun PlanCard(
                     )
                 ) {
                     Text(
-                        text = "ACCEDER",
+                        text = if (title == "Plan Básico") "ACTUALIZAR PLAN" else "ACCEDER",
                         fontWeight = FontWeight.Bold,
                         fontSize = dimens.fontBody
                     )
