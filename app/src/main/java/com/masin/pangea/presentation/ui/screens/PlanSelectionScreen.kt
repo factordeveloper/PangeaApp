@@ -105,54 +105,59 @@ fun PlanSelectionScreen(
             Spacer(modifier = Modifier.height(dimens.spacingLarge))
 
             // Layout de planes: columna en móvil, fila en tablet
+            val isAnyPlanSelected = selectedPlan != null
             if (dimens.isTablet) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(if (!isAnyPlanSelected) Modifier.height(IntrinsicSize.Max) else Modifier),
                     horizontalArrangement = Arrangement.spacedBy(dimens.spacingLarge),
                     verticalAlignment = Alignment.Top
                 ) {
-                    Box(modifier = Modifier.weight(1f)) {
-                        PlanCard(
-                            title = "Plan Básico",
-                            description = "DigiTurno, E-learning y Desk",
-                            discountText = "",
-                            dotCount = 3,
-                            isSelected = selectedPlan == PlanType.BASIC,
-                            onSelect = {
-                                selectedPlan = if (selectedPlan == PlanType.BASIC) null else PlanType.BASIC
-                            },
-                            onAccess = { onNavigateToHome(selectedPlan) },
-                            icons = listOf(
-                                ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
-                                ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
-                                ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio.")
-                            ),
-                            showInfoButtons = false,
-                            dimens = dimens
-                        )
-                    }
-                    Box(modifier = Modifier.weight(1f)) {
-                        PlanCard(
-                            title = "Plan Premium",
-                            description = "DigiTurno, E-learning, Desk, Agente IA, Eventos en vivo, Administración de contraseñas, Radar territorial, Ventanilla de pagos y Agendamiento.",
-                            discountText = "Ahorra 20%",
-                            dotCount = 8,
-                            isSelected = selectedPlan == PlanType.PREMIUM,
-                            onSelect = {
-                                selectedPlan = if (selectedPlan == PlanType.PREMIUM) null else PlanType.PREMIUM
-                            },
-                            onAccess = { onNavigateToHome(selectedPlan) },
-                            icons = listOf(
-                                ServiceIconItem(R.drawable.agente, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
-                                ServiceIconItem(R.drawable.live, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
-                                ServiceIconItem(R.drawable.gestor_pass, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
-                                ServiceIconItem(R.drawable.radar_territorial, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
-                                ServiceIconItem(R.drawable.pagos, "Ventanilla de pagos", "Módulo para realizar pagos en línea."),
-                                ServiceIconItem(R.drawable.calendario, "Agendamiento", "Módulo para agendar tus citas y eventos.")
-                            ),
-                            dimens = dimens
-                        )
-                    }
+                    PlanCard(
+                        title = "Plan Básico",
+                        description = "DigiTurno, E-learning y Desk",
+                        discountText = "",
+                        dotCount = 3,
+                        isSelected = selectedPlan == PlanType.BASIC,
+                        onSelect = {
+                            selectedPlan = if (selectedPlan == PlanType.BASIC) null else PlanType.BASIC
+                        },
+                        onAccess = { onNavigateToHome(selectedPlan) },
+                        buttonText = "ACCEDER",
+                        icons = listOf(
+                            ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
+                            ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
+                            ServiceIconItem(R.drawable.desk, "Desk", "Herramientas de soporte y administración de tu escritorio.")
+                        ),
+                        showInfoButtons = false,
+                        dimens = dimens,
+                        modifier = Modifier.weight(1f).then(if (!isAnyPlanSelected) Modifier.fillMaxHeight() else Modifier),
+                        enforceSymmetry = !isAnyPlanSelected
+                    )
+                    PlanCard(
+                        title = "Plan Enterprise",
+                        description = "DigiTurno, E-learning, Desk, Agente IA, Eventos en vivo, Administración de contraseñas, Radar territorial, Ventanilla de pagos y Agendamiento.",
+                        discountText = "Ahorra 20%",
+                        dotCount = 8,
+                        isSelected = selectedPlan == PlanType.ENTERPRISE,
+                        onSelect = {
+                            selectedPlan = if (selectedPlan == PlanType.ENTERPRISE) null else PlanType.ENTERPRISE
+                        },
+                        onAccess = { onNavigateToHome(selectedPlan) },
+                        buttonText = "ACTUALIZAR PLAN",
+                        icons = listOf(
+                            ServiceIconItem(R.drawable.agente, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
+                            ServiceIconItem(R.drawable.live, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
+                            ServiceIconItem(R.drawable.gestor_pass, "Admin. de contraseñas", "Gestor seguro para proteger todas tus contraseñas."),
+                            ServiceIconItem(R.drawable.radar_territorial, "Radar territorial", "Monitoreo y ubicación de proyectos en el territorio."),
+                            ServiceIconItem(R.drawable.pagos, "Ventanilla de pagos", "Módulo para realizar pagos en línea."),
+                            ServiceIconItem(R.drawable.calendario, "Agendamiento", "Módulo para agendar tus citas y eventos.")
+                        ),
+                        dimens = dimens,
+                        modifier = Modifier.weight(1f).then(if (!isAnyPlanSelected) Modifier.fillMaxHeight() else Modifier),
+                        enforceSymmetry = !isAnyPlanSelected
+                    )
                 }
             } else {
                 // Móvil: planes apilados verticalmente
@@ -166,6 +171,7 @@ fun PlanSelectionScreen(
                         selectedPlan = if (selectedPlan == PlanType.BASIC) null else PlanType.BASIC
                     },
                     onAccess = { onNavigateToHome(selectedPlan) },
+                    buttonText = "ACCEDER",
                     icons = listOf(
                         ServiceIconItem(R.drawable.digiturno, "DigiTurno", "Gestión de turnos de manera eficiente y rápida."),
                         ServiceIconItem(R.drawable.elearning, "E-learning", "Plataforma de formación y educación virtual."),
@@ -178,14 +184,14 @@ fun PlanSelectionScreen(
                 Spacer(modifier = Modifier.height(dimens.spacingLarge))
 
                 PlanCard(
-                    title = "Plan Premium",
+                    title = "Plan Enterprise",
                     description = "DigiTurno, E-learning, Desk, Agente IA, Eventos en vivo, Administración de contraseñas, Radar territorial, Ventanilla de pagos y Agendamiento.",
                     discountText = "Ahorra 20%",
                     dotCount = 8,
-                    isSelected = selectedPlan == PlanType.PREMIUM,
+                    isSelected = selectedPlan == PlanType.ENTERPRISE,
                     onSelect = {
-                        selectedPlan = if (selectedPlan == PlanType.PREMIUM) null else PlanType.PREMIUM
-                        if (selectedPlan == PlanType.PREMIUM) {
+                        selectedPlan = if (selectedPlan == PlanType.ENTERPRISE) null else PlanType.ENTERPRISE
+                        if (selectedPlan == PlanType.ENTERPRISE) {
                             coroutineScope.launch {
                                 delay(350)
                                 scrollState.animateScrollTo(scrollState.maxValue)
@@ -193,6 +199,7 @@ fun PlanSelectionScreen(
                         }
                     },
                     onAccess = { onNavigateToHome(selectedPlan) },
+                    buttonText = "ACTUALIZAR PLAN",
                     icons = listOf(
                         ServiceIconItem(R.drawable.agente, "Agente IA", "Asistencia virtual inteligente para resolver tus dudas."),
                         ServiceIconItem(R.drawable.live, "Eventos en vivo", "Transmisiones y eventos interactivos en tiempo real."),
@@ -211,7 +218,7 @@ fun PlanSelectionScreen(
 }
 
 enum class PlanType {
-    BASIC, PREMIUM
+    BASIC, ENTERPRISE
 }
 
 @Composable
@@ -223,22 +230,292 @@ fun PlanCard(
     isSelected: Boolean,
     onSelect: () -> Unit,
     onAccess: () -> Unit,
+    buttonText: String,
     icons: List<ServiceIconItem>,
     showInfoButtons: Boolean = true,
-    dimens: com.masin.pangea.presentation.ui.utils.AppDimens
+    dimens: com.masin.pangea.presentation.ui.utils.AppDimens,
+    modifier: Modifier = Modifier,
+    enforceSymmetry: Boolean = false
 ) {
     val iconSize = (dimens.circleItemSize.value * 0.78f).dp        // ~70dp en compact
     val iconInnerSize = (dimens.iconSizeLarge.value * 1.0f).dp    // ~36dp en compact
 
-    Column(modifier = Modifier.fillMaxWidth()) {
-        // Tag de ahorro superpuesto
+    Box(modifier = modifier.fillMaxWidth()) {
+        // Contenido principal en columna
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (enforceSymmetry) Modifier.fillMaxHeight() else Modifier)
+                .padding(top = 16.dp)
+        ) {
+            // Tarjeta blanca principal
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(if (enforceSymmetry) Modifier.weight(1f) else Modifier)
+                    .background(Color.White, RoundedCornerShape(dimens.cardCornerRadius))
+                    .clickable { onSelect() }
+                    .padding(dimens.paddingCard)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(if (enforceSymmetry) Modifier.fillMaxHeight() else Modifier),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .then(if (enforceSymmetry) Modifier.fillMaxHeight() else Modifier)
+                    ) {
+                        Text(
+                            text = title,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = dimens.fontSubtitle,
+                            color = Color(0xFF0D2B2B)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = description,
+                            fontSize = dimens.fontCaption,
+                            color = Color.Gray,
+                            lineHeight = dimens.lineHeightSmall
+                        )
+
+                        if (!isSelected) {
+                            Spacer(modifier = Modifier.weight(1f)) // Empuja los puntos hacia abajo para simetría
+                            Spacer(modifier = Modifier.height(dimens.spacingMedium))
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                repeat(dotCount) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(10.dp)
+                                            .background(Color(0xFF0D2B2B), CircleShape)
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(dimens.spacingMedium))
+
+                    // Radio button (círculo Cyan)
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(top = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .background(Color.White, CircleShape)
+                                .padding(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(if (isSelected) PangeaCyan else Color.Transparent, CircleShape)
+                            )
+                        }
+                        androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
+                            drawCircle(
+                                color = PangeaCyan,
+                                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 8f)
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Contenido expandido (fondo verde oscuro)
+            AnimatedVisibility(
+                visible = isSelected,
+                enter = expandVertically(animationSpec = tween(300)),
+                exit = shrinkVertically(animationSpec = tween(300))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = (-10).dp)
+                        .zIndex(1f)
+                        .background(
+                            Color(0xFF0A4444),
+                            shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+                        )
+                        .padding(top = 30.dp, bottom = dimens.spacingLarge,
+                            start = dimens.paddingCard, end = dimens.paddingCard),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .background(com.masin.pangea.ui.theme.PangeaBlue, RoundedCornerShape(12.dp))
+                            .padding(horizontal = dimens.spacingLarge, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = title,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = dimens.fontCaption
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(dimens.spacingLarge))
+
+                    // Grid de iconos
+                    val numColumns = 3
+                    val rows = (icons.size + numColumns - 1) / numColumns
+
+                    for (i in 0 until rows) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            for (j in 0 until numColumns) {
+                                val index = i * numColumns + j
+                                if (index < icons.size) {
+                                    val item = icons[index]
+                                    var showInfo by remember { mutableStateOf(false) }
+
+                                    Box(
+                                        modifier = Modifier
+                                            .size(iconSize)
+                                            .background(Color.White, CircleShape),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        val context = androidx.compose.ui.platform.LocalContext.current
+                                        AsyncImage(
+                                            model = ImageRequest.Builder(context)
+                                                .data(item.iconRes)
+                                                .crossfade(true)
+                                                .build(),
+                                            contentDescription = null,
+                                            modifier = Modifier.fillMaxSize().clip(CircleShape),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                        
+                                        if (showInfoButtons) {
+                                            Box(
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentAlignment = Alignment.TopEnd
+                                            ) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .padding(2.dp)
+                                                        .size(24.dp)
+                                                        .background(PangeaCyan, CircleShape)
+                                                        .clickable { showInfo = true },
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    Text(text = "+", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                                }
+                                            }
+                                        }
+                                        
+                                        if (showInfo) {
+                                            Dialog(
+                                                onDismissRequest = { showInfo = false },
+                                                properties = DialogProperties(
+                                                    dismissOnClickOutside = true,
+                                                    dismissOnBackPress = true
+                                                )
+                                            ) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .background(Color.White, RoundedCornerShape(16.dp))
+                                                ) {
+                                                    Column(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(horizontal = 24.dp, vertical = 32.dp),
+                                                        horizontalAlignment = Alignment.CenterHorizontally
+                                                    ) {
+                                                        // Icono en el centro del modal
+                                                        Image(
+                                                            painter = painterResource(id = item.iconRes),
+                                                            contentDescription = null,
+                                                            modifier = Modifier.size(64.dp),
+                                                            contentScale = ContentScale.Fit
+                                                        )
+                                                        
+                                                        Spacer(modifier = Modifier.height(16.dp))
+
+                                                        Text(
+                                                            text = item.name,
+                                                            color = Color(0xFF0D2B2B),
+                                                            fontSize = 20.sp,
+                                                            fontWeight = FontWeight.Bold,
+                                                            textAlign = TextAlign.Center
+                                                        )
+
+                                                        Spacer(modifier = Modifier.height(12.dp))
+
+                                                        Text(
+                                                            text = item.description,
+                                                            color = Color.DarkGray,
+                                                            fontSize = 16.sp,
+                                                            fontWeight = FontWeight.Normal,
+                                                            textAlign = TextAlign.Center,
+                                                            lineHeight = 22.sp
+                                                        )
+                                                    }
+                                                    
+                                                    // Botón cerrar (X)
+                                                    Text(
+                                                        text = "X", 
+                                                        color = Color.Red, 
+                                                        fontWeight = FontWeight.Bold, 
+                                                        fontSize = 20.sp,
+                                                        modifier = Modifier
+                                                            .align(Alignment.TopEnd)
+                                                            .clickable { showInfo = false }
+                                                            .padding(16.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    Spacer(modifier = Modifier.size(iconSize))
+                                }
+                            }
+                        }
+                        if (i < rows - 1) {
+                            Spacer(modifier = Modifier.height(dimens.spacingMedium))
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(dimens.spacingLarge))
+
+                    Button(
+                        onClick = onAccess,
+                        modifier = Modifier
+                            .fillMaxWidth(if (dimens.isTablet) 0.5f else 0.6f)
+                            .height(dimens.buttonHeight),
+                        shape = RoundedCornerShape(dimens.buttonCornerRadius),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = com.masin.pangea.ui.theme.PangeaGreen,
+                            contentColor = Color.Black
+                        )
+                    ) {
+                        Text(
+                            text = buttonText,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = dimens.fontBody
+                        )
+                    }
+                }
+            }
+        }
+
+        // Tag de ahorro superpuesto (Overlay absoluto al centro superior)
         if (discountText.isNotEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = 12.dp)
-                    .zIndex(1f),
-                contentAlignment = Alignment.Center
+                    .zIndex(2f),
+                contentAlignment = Alignment.TopCenter
             ) {
                 Box(
                     modifier = Modifier
@@ -250,257 +527,6 @@ fun PlanCard(
                         color = Color(0xFF0D2B2B),
                         fontWeight = FontWeight.Bold,
                         fontSize = dimens.fontSmall
-                    )
-                }
-            }
-        }
-
-        // Tarjeta blanca principal
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White, RoundedCornerShape(dimens.cardCornerRadius))
-                .clickable { onSelect() }
-                .padding(dimens.paddingCard)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = title,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimens.fontSubtitle,
-                        color = Color(0xFF0D2B2B)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = description,
-                        fontSize = dimens.fontCaption,
-                        color = Color.Gray,
-                        lineHeight = dimens.lineHeightSmall
-                    )
-
-                    if (!isSelected) {
-                        Spacer(modifier = Modifier.height(dimens.spacingMedium))
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            repeat(dotCount) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(10.dp)
-                                        .background(Color(0xFF0D2B2B), CircleShape)
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(dimens.spacingMedium))
-
-                // Radio button (círculo Cyan)
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(top = 4.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(Color.White, CircleShape)
-                            .padding(4.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(if (isSelected) PangeaCyan else Color.Transparent, CircleShape)
-                        )
-                    }
-                    androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
-                        drawCircle(
-                            color = PangeaCyan,
-                            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 8f)
-                        )
-                    }
-                }
-            }
-        }
-
-        // Contenido expandido (fondo verde oscuro)
-        AnimatedVisibility(
-            visible = isSelected,
-            enter = expandVertically(animationSpec = tween(300)),
-            exit = shrinkVertically(animationSpec = tween(300))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset(y = (-10).dp)
-                    .background(
-                        Color(0xFF0A4444),
-                        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
-                    )
-                    .padding(top = 30.dp, bottom = dimens.spacingLarge,
-                        start = dimens.paddingCard, end = dimens.paddingCard),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .background(com.masin.pangea.ui.theme.PangeaBlue, RoundedCornerShape(12.dp))
-                        .padding(horizontal = dimens.spacingLarge, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = title,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimens.fontCaption
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(dimens.spacingLarge))
-
-                // Grid de iconos
-                val numColumns = 3
-                val rows = (icons.size + numColumns - 1) / numColumns
-
-                for (i in 0 until rows) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        for (j in 0 until numColumns) {
-                            val index = i * numColumns + j
-                            if (index < icons.size) {
-                                val item = icons[index]
-                                var showInfo by remember { mutableStateOf(false) }
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(iconSize)
-                                        .background(Color.White, CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    val context = androidx.compose.ui.platform.LocalContext.current
-                                    AsyncImage(
-                                        model = ImageRequest.Builder(context)
-                                            .data(item.iconRes)
-                                            .crossfade(true)
-                                            .build(),
-                                        contentDescription = null,
-                                        modifier = Modifier.fillMaxSize().clip(CircleShape),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                    
-                                    if (showInfoButtons) {
-                                        Box(
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentAlignment = Alignment.TopEnd
-                                        ) {
-                                            Box(
-                                                modifier = Modifier
-                                                    .padding(2.dp)
-                                                    .size(24.dp)
-                                                    .background(PangeaCyan, CircleShape)
-                                                    .clickable { showInfo = true },
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Text(text = "+", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                                            }
-                                        }
-                                    }
-                                    
-                                    if (showInfo) {
-                                        Dialog(
-                                            onDismissRequest = { showInfo = false },
-                                            properties = DialogProperties(
-                                                dismissOnClickOutside = true,
-                                                dismissOnBackPress = true
-                                            )
-                                        ) {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .background(Color.White, RoundedCornerShape(16.dp))
-                                            ) {
-                                                Column(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(horizontal = 24.dp, vertical = 32.dp),
-                                                    horizontalAlignment = Alignment.CenterHorizontally
-                                                ) {
-                                                    // Icono en el centro del modal
-                                                    Image(
-                                                        painter = painterResource(id = item.iconRes),
-                                                        contentDescription = null,
-                                                        modifier = Modifier.size(64.dp),
-                                                        contentScale = ContentScale.Fit
-                                                    )
-                                                    
-                                                    Spacer(modifier = Modifier.height(16.dp))
-
-                                                    Text(
-                                                        text = item.name,
-                                                        color = Color(0xFF0D2B2B),
-                                                        fontSize = 20.sp,
-                                                        fontWeight = FontWeight.Bold,
-                                                        textAlign = TextAlign.Center
-                                                    )
-
-                                                    Spacer(modifier = Modifier.height(12.dp))
-
-                                                    Text(
-                                                        text = item.description,
-                                                        color = Color.DarkGray,
-                                                        fontSize = 16.sp,
-                                                        fontWeight = FontWeight.Normal,
-                                                        textAlign = TextAlign.Center,
-                                                        lineHeight = 22.sp
-                                                    )
-                                                }
-                                                
-                                                // Botón cerrar (X)
-                                                Text(
-                                                    text = "X", 
-                                                    color = Color.Red, 
-                                                    fontWeight = FontWeight.Bold, 
-                                                    fontSize = 20.sp,
-                                                    modifier = Modifier
-                                                        .align(Alignment.TopEnd)
-                                                        .clickable { showInfo = false }
-                                                        .padding(16.dp)
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                Spacer(modifier = Modifier.size(iconSize))
-                            }
-                        }
-                    }
-                    if (i < rows - 1) {
-                        Spacer(modifier = Modifier.height(dimens.spacingMedium))
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(dimens.spacingLarge))
-
-                Button(
-                    onClick = onAccess,
-                    modifier = Modifier
-                        .fillMaxWidth(if (dimens.isTablet) 0.5f else 0.6f)
-                        .height(dimens.buttonHeight),
-                    shape = RoundedCornerShape(dimens.buttonCornerRadius),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = com.masin.pangea.ui.theme.PangeaGreen,
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Text(
-                        text = if (title == "Plan Básico") "ACTUALIZAR PLAN" else "ACCEDER",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimens.fontBody
                     )
                 }
             }

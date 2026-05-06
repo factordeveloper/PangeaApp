@@ -3,6 +3,7 @@ package com.masin.pangea.presentation.ui.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +25,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +47,7 @@ import com.masin.pangea.presentation.ui.utils.AppDimens
 import com.masin.pangea.presentation.ui.utils.WindowSizeClass
 import com.masin.pangea.presentation.ui.utils.rememberAppDimens
 import com.masin.pangea.ui.theme.PANGEAappTheme
+import com.masin.pangea.ui.theme.PangeaCyan
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -72,7 +77,7 @@ fun HomeScreen(
     val context = androidx.compose.ui.platform.LocalContext.current
     val sharedPrefs = androidx.compose.runtime.remember { context.getSharedPreferences("pangea_prefs", android.content.Context.MODE_PRIVATE) }
     val selectedPlanStr = sharedPrefs.getString("selected_plan", "BASIC")
-    val isPremium = selectedPlanStr == "PREMIUM"
+    val isPremium = selectedPlanStr == "PREMIUM" || selectedPlanStr == "ENTERPRISE"
 
     BoxWithConstraints(
         modifier = Modifier
@@ -109,10 +114,10 @@ fun HomeScreen(
                         .background(Color.Black.copy(alpha = 0.55f))
                 )
                 Text(
-                    text = "Pangea nació del sueño de unir territorios mediante una ciudadanía digital que conecta personas, empresarios y comunidades bajo los valores de inclusión, sostenibilidad e innovación. Es un ecosistema donde cada espacio tiene un propósito: impulsar proyectos, formar talentos y demostrar que la tecnología puede transformar vidas.",
+                    text = "Pangea, un ecosistema que impulsa proyectos, forma talentos y transforma vidas mediante la tecnología.",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(dimens.paddingScreen)
+                        .padding(horizontal = dimens.paddingScreen)
                         .align(Alignment.Center),
                     fontSize = dimens.fontBody,
                     color = Color.White,
@@ -139,58 +144,11 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(dimens.spacingMedium))
 
-                if (dimens.isTablet) {
-                    // Tablet: 3 tarjetas en fila horizontal
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Min),
-                        horizontalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
-                    ) {
-                        TealInfoBlock(
-                            modifier = Modifier.weight(1f).fillMaxHeight(),
-                            dimens = dimens,
-                            text = "En este espacio encontrarás toda la información que necesitas para cumplir con tus obligaciones tributarias. Infórmate sobre los impuestos distritales, plazos, beneficios y normatividad vigente."
-                        )
-                        TealInfoBlock(
-                            modifier = Modifier.weight(1f).fillMaxHeight(),
-                            dimens = dimens,
-                            text = "Buscamos conectar emocionalmente con nuestros grupos de interés y compartir nuestra historia."
-                        )
-                        TealInfoBlock(
-                            modifier = Modifier.weight(1f).fillMaxHeight(),
-                            dimens = dimens,
-                            text = "Somos la Corporación de Territorios Inteligentes y Sostenibles (CTIS); Organización No Gubernamental colombiana."
-                        )
-                    }
-                } else {
-                    // Móvil: 1 tarjeta arriba + 2 tarjetas en fila abajo
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
-                    ) {
-                        TealInfoBlock(
-                            dimens = dimens,
-                            text = "En este espacio encontrarás toda la información que necesitas para cumplir con tus obligaciones tributarias. Infórmate sobre los impuestos distritales, plazos, beneficios y normatividad vigente."
-                        )
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(IntrinsicSize.Min),
-                            horizontalArrangement = Arrangement.spacedBy(dimens.spacingMedium)
-                        ) {
-                            TealInfoBlock(
-                                modifier = Modifier.weight(1f).fillMaxHeight(),
-                                dimens = dimens,
-                                text = "Buscamos conectar emocionalmente con nuestros grupos de interés y compartir nuestra historia."
-                            )
-                            TealInfoBlock(
-                                modifier = Modifier.weight(1f).fillMaxHeight(),
-                                dimens = dimens,
-                                text = "Somos la Corporación de Territorios Inteligentes y Sostenibles (CTIS); Organización No Gubernamental colombiana."
-                            )
-                        }
-                    }
-                }
+                TealInfoBlock(
+                    modifier = Modifier.fillMaxWidth(),
+                    dimens = dimens,
+                    text = "CTIS, la Corporación de Territorios Inteligentes y Sostenibles del Grupo Masin nació hace más de 30 años en Colombia, con el propósito de transformar territorios y comunidades."
+                )
             }
 
             Spacer(modifier = Modifier.height(dimens.spacingLarge))
@@ -236,25 +194,59 @@ fun HomeScreen(
                     )
                 }
 
-                if (isPremium) {
-                    Spacer(modifier = Modifier.height(dimens.spacingMedium))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        DiscoverCircle(label = "Agente IA", dimens = dimens, backgroundRes = R.drawable.agente, onClick = {})
-                        DiscoverCircle(label = "Event. en vivo", dimens = dimens, backgroundRes = R.drawable.live, onClick = {})
-                        DiscoverCircle(label = "Admin. Pass", dimens = dimens, backgroundRes = R.drawable.gestor_pass, onClick = {})
-                    }
-                    Spacer(modifier = Modifier.height(dimens.spacingMedium))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        DiscoverCircle(label = "Radar territ.", dimens = dimens, backgroundRes = R.drawable.radar_territorial, onClick = onNavigateToRadar)
-                        DiscoverCircle(label = "Pago en línea", dimens = dimens, backgroundRes = R.drawable.pagos, onClick = {})
-                        DiscoverCircle(label = "Agendamiento", dimens = dimens, backgroundRes = R.drawable.calendario, onClick = {})
-                    }
+                Spacer(modifier = Modifier.height(dimens.spacingMedium))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    DiscoverCircle(
+                        label = "Agente IA",
+                        dimens = dimens,
+                        backgroundRes = R.drawable.agente,
+                        isLocked = !isPremium,
+                        onClick = {}
+                    )
+                    DiscoverCircle(
+                        label = "Event. en vivo",
+                        dimens = dimens,
+                        backgroundRes = R.drawable.live,
+                        isLocked = !isPremium,
+                        onClick = {}
+                    )
+                    DiscoverCircle(
+                        label = "Admin. Pass",
+                        dimens = dimens,
+                        backgroundRes = R.drawable.gestor_pass,
+                        isLocked = !isPremium,
+                        onClick = {}
+                    )
+                }
+                Spacer(modifier = Modifier.height(dimens.spacingMedium))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    DiscoverCircle(
+                        label = "Radar territ.",
+                        dimens = dimens,
+                        backgroundRes = R.drawable.radar_territorial,
+                        isLocked = !isPremium,
+                        onClick = { if (isPremium) onNavigateToRadar() }
+                    )
+                    DiscoverCircle(
+                        label = "Pago en línea",
+                        dimens = dimens,
+                        backgroundRes = R.drawable.pagos,
+                        isLocked = !isPremium,
+                        onClick = {}
+                    )
+                    DiscoverCircle(
+                        label = "Agendamiento",
+                        dimens = dimens,
+                        backgroundRes = R.drawable.calendario,
+                        isLocked = !isPremium,
+                        onClick = {}
+                    )
                 }
             }
 
@@ -298,6 +290,7 @@ private fun DiscoverCircle(
     label: String,
     dimens: AppDimens,
     backgroundRes: Int,
+    isLocked: Boolean = false,
     onClick: () -> Unit
 ) {
     Card(
@@ -305,6 +298,13 @@ private fun DiscoverCircle(
             .size(dimens.circleItemSize)
             .shadow(4.dp, CircleShape)
             .clip(CircleShape)
+            .then(
+                if (isLocked) {
+                    Modifier.border(1.dp, PangeaCyan.copy(alpha = 0.5f), CircleShape)
+                } else {
+                    Modifier.border(1.5.dp, PangeaCyan, CircleShape)
+                }
+            )
             .clickable(onClick = onClick),
         shape = CircleShape,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -327,15 +327,28 @@ private fun DiscoverCircle(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.35f))
+                    .background(Color.Black.copy(alpha = if (isLocked) 0.65f else 0.35f))
             )
+            if (isLocked) {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "Locked",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.Center)
+                )
+            }
             Text(
                 text = label,
                 fontSize = dimens.fontCaption,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = Color.White.copy(alpha = if (isLocked) 0.7f else 1f),
                 textAlign = TextAlign.Center,
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 12.dp)
             )
         }
     }

@@ -139,7 +139,8 @@ fun MainScreen() {
     val context = LocalContext.current
     val sharedPrefs = remember { context.getSharedPreferences("pangea_prefs", android.content.Context.MODE_PRIVATE) }
     val isFirstRun = remember { sharedPrefs.getBoolean("is_first_run", true) }
-    val isPremium = sharedPrefs.getString("selected_plan", "BASIC") == "PREMIUM"
+    val selectedPlan = sharedPrefs.getString("selected_plan", "BASIC")
+    val isPremium = selectedPlan == "PREMIUM" || selectedPlan == "ENTERPRISE"
     val startDestination = if (isFirstRun) NavRoutes.WALKTHROUGH else NavRoutes.WELCOME
 
     val navController = rememberNavController()

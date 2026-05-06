@@ -194,9 +194,9 @@ fun rememberAppDimens(): AppDimens {
                 WindowSizeClass.EXPANDED -> 160.dp
             },
             heroImageSize = when (windowSizeClass) {
-                WindowSizeClass.COMPACT -> (240f * scale).dp.coerceIn(200.dp, 280.dp)
-                WindowSizeClass.MEDIUM -> 300.dp
-                WindowSizeClass.EXPANDED -> 340.dp
+                WindowSizeClass.COMPACT -> (160f * scale).dp.coerceIn(140.dp, 190.dp)
+                WindowSizeClass.MEDIUM -> 220.dp
+                WindowSizeClass.EXPANDED -> 260.dp
             },
             circleItemSize = when (windowSizeClass) {
                 WindowSizeClass.COMPACT -> (90f * scale).dp.coerceIn(80.dp, 110.dp)
